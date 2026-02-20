@@ -24,5 +24,5 @@ window.addEventListener('keydown', (e) => {
 - offsetX: 클릭한 박스의 왼쪽 모서리 기준. (ex. 그림판 그리기)
 
 - innerWidth: 탭/메뉴바 뺀 순수 웹사이트 화면 크기.
-- screen.width: 그냥 모니터 해상도 크
+- screen.width: 그냥 모니터 해상도 크가
 */
