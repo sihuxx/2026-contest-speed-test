@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B6</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    .container{display: flex;align-items: center; gap: 50px;}
+    .items, .dragZone {display: flex;justify-content: center;align-items: center; border: 1px solid black; width: 700px;height: 450px; display: grid;grid-template-columns: repeat(3, 1fr);}
+  </style>
+</head>
+<body class="center"> 
+  <div class="container">
+    <div class="itemZone">
+      <ul class="items">
+        <li class="item"><img src="./test1.gif"></li>
+        <li class="item"><img src="./test1.jpg"></li>
+        <li class="item"><img src="./test1.png"></li>
+        <li class="item"><img src="./test2.gif"></li>
+        <li class="item"><img src="./test2.jpg"></li>
+        <li class="item"><img src="./test2.png"></li>
+      </ul>
+    </div>
+    <div class="dragZone">
+      <p class="p">이미지를 여기에 드래그하세요</p>
+    </div>
+    <button class="init">초기화</button>
+  </div>
+</body>
+<script src="../lib/lib.js"></script>
+<script src="./script/04.js"></script>
+</html>

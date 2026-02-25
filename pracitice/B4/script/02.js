@@ -1,0 +1,1 @@
+setInterval(() => time.textContent = new Date().toLocaleTimeString().slice(2))
