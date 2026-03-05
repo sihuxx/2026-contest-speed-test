@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const canvas = $("canvas")
 const legend = $(".legend")
 const lbl = $("#labelInput")
@@ -39,4 +40,43 @@ function render() {
     start += angle // 시작 지점을 이미 칠한 영역의 오른 편에서 시작해서 칠해야함으로 시작 지점에 각도를 더해서 쭉 이어지게함
     // 360도에서 총합 값을 더하고 각각 데이터만 쭉 이어붙이는 형식
   })
+=======
+const canvas = $("#canvas")
+const legend = $(".legend")
+const lbl = $("#labelInput")
+const val = $("#valueInput")
+const ctx =  canvas.getContext('2d')
+let data = []
+
+$("button").onclick = () => {
+    if(!lbl.value || val.value <= 0) return
+    data.push({l: lbl.value, v:+val.value, h:`hsl(${Math.random() * 360}, 60%, 70%)`})
+    [lbl.value, val.value] = ["", ""]
+    render()
+}
+function render() {
+    const total = data.reduce((s, e) => s + e.v, 0)
+    let start = -Math.PI / 2
+    legend.innerHTML = ""
+    ctx.clearRect(0, 0, 500, 500)
+
+    data.forEach(({ l, v, h }) => {
+        const angle = (v / total) * Math.PI * 2
+
+        ctx.beginPath()
+        ctx.moveTo(250, 250)
+        ctx.arc(250, 250, 150, start, start + angle)
+        ctx.fillStyle = h
+        ctx.fill()
+
+        legend.innerHTML += `
+        <div class="legend-item">
+                <div class="legend-color" style="background-color:${h}"></div>
+                <span>${l} (${(v / total * 100).toFixed(1)}%)</span>
+            </div>
+        `
+
+        start += angle
+    })
+>>>>>>> 2a527936217885ec38c812d0776a3a44710b8283
 }

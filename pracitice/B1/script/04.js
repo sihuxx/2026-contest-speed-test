@@ -8,6 +8,7 @@ const getPsw = pw => {
   !l ? 'black' : (l >= 8 && a && n && t) ? "green" : (l >= 6 && (a || n)) ? "yellow" : "red"
 }
 
+
 input.addEventListener('input', () => {
   getPsw(input.value)
 })

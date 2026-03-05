@@ -25,7 +25,7 @@ $nextBtn.addEventListener("click", () => {
 
 function render() {
   const range = state.limit * (state.page - 1)
-  $tableBody.innerHTML = rows.slice(range, range + state.limit)
+  $tableBody.innerHTML = rows.slice(range, range + state.limit).join("")
 
   $prevBtn.disabled = state.page === 1
   $nextBtn.disabled = state.page === 5
