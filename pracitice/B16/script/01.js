@@ -40,7 +40,7 @@ function render(){
     $todoList.innerHTML = ''; // 투두 리스트를 비움
     const $todoItems = services[state.activeFilter]().map( todo => 
       // 현재 접근한 필터의 투두에 map을 돌려서 각 todo에 접근
-        createElement('div', { // div 요소 만든후
+        newEl('div', { // div 요소 만든후
             className:`todo-item ${todo.completed ? 'completed' : ''}`, // 해당 투두가 완료 상태라면 completed 클래스 추가, 아니면 빈 값
             innerHTML: `
                 <div class="todo-header">
