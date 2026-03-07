@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A10</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    .shape {width: 420px;height: 420px;background-color: red;animation: ani 4s ease-in-out infinite;}
+    @keyframes ani {
+      0%, 100% {clip-path: polygon(50% 0%, 50% 0%, 100% 100%, 100% 100%, 0% 100%, 0 100%); } /* 삼각형 */
+      25% {clip-path: polygon(20% 5%, 80% 5%, 80% 85%, 80% 85%, 20% 85%, 20% 85%);} /* 사각형 */
+      50% {clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 82% 100%, 18% 100%, 0% 38%);} /* 오각형 */
+      75% {clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);} /* 육각형 */
+    }
+  </style>
+</head>
+<body class="center">
+  <div class="shape"></div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+.container {box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);}
+main > div {display: flex;width: 800px;padding: 15px; justify-content: space-between;}
+main > div > div {display: flex;align-items: center;gap: 30px;}
+header {border-radius: 15px 15px 0 0; background-color: rgb(66, 66, 66);height: 80px;color: white;display: flex;justify-content: center;align-items: center;}
+img {width: 100px;height: 100px;border-radius: 20px;}
+.title {font-weight: bold;color: black !important;}
+main > div > div > div {align-items: start;gap: 5px;display: flex;}
+.fc > p {color: gray;}
+.box {width: 30px;height: 30px;border-radius: 1px solid;text-align: center;line-height: 30px;border: 1px solid rgb(224, 224, 224);}
+.count {display: flex;gap: 10px;align-items: center;}
+.del{background-color: red;color: white;border-radius: 50%;width: 20px;height: 20px;line-height: 20px;text-align: center;}
+.btns {margin-top: 30px;display: flex;justify-content: center;gap: 10px;}
+.btns button {border: 0;color: white;padding: 10px 15px;border-radius: 5px;}
+button:nth-child(1) {background-color: rgb(138, 138, 138);}
+button:nth-child(2) {background-color: rgb(69, 158, 28);}
+hr{opacity: 0.5;}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<link rel="stylesheet" href="../lib/style.css">
+<body class="center"> 
+  <div>
+    <input type="text" id="input">
+    <button id="btn">추가</button>
+  </div>
+  <ul id="list"></ul>
+</body>
+<script src="../lib/lib.js"></script>
+<script>
+  btn.addEventListener("click", () => {
+    const li = newEl("li", {
+      innerHTML: `${input.value} <button onclick="parentElement.remove()">삭제</button>`
+    })
+    list.append(li)
+    input.value = ""
+  })
+</script>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B6</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    .container {display: flex;justify-content: space-between;align-items: center;gap: 100px;}
+    .dragItem, .dragZone {position: relative; border: 1px solid black; display: grid;grid-template-columns: repeat(3, 1fr);width: fit-content;gap: 15px;}
+    p {position: absolute;top: 20px;left: 20px;white-space: nowrap;}
+    .dragZone {width: 700px;height: 450px;}
+    .dragItem {width: 700px;height: 450px;}
+  </style>
+</head>
+<body class="center">
+  <div class="container">
+    <div class="items">
+      <ul class="dragItem">
+        <li><img src="./test-images/test1.gif" alt="img"></li>
+        <li><img src="./test-images/test1.jpg" alt="img"></li>
+        <li><img src="./test-images/test1.png" alt="img"></li>
+        <li><img src="./test-images/test2.gif" alt="img"></li>
+        <li><img src="./test-images/test2.jpg" alt="img"></li>
+        <li><img src="./test-images/test2.png" alt="img"></li>
+      </ul>
+    </div>
+    <div class="dragZone">
+      <p>드래그 하세요</p>
+    </div>
+    <button class="init">초기화</button>
+  </div>
+</body>
+<script src="../lib/lib.js"></script>
+<script src="./script.js"></script>
+</html>

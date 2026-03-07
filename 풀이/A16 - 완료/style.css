@@ -1,0 +1,19 @@
+.container {display: flex;gap: 40px; flex-direction: column;}
+header {display: flex;align-items: center;gap: 50px;}
+header [class*="step"] {width: 60px;height: 60px;border-radius: 50%;}
+header [class*="line"] {width: 200px;height: 6px;}
+main {display: flex;gap: 180px;}
+main .box {display: flex;flex-direction: column;gap: 5px;white-space: nowrap;}
+.box .title {font-size: 30px;font-weight: 500;}
+.box [class*=state] {margin-top: 10px;font-size: 18px;}
+.box .sub {letter-spacing: 2px;color: gray;}
+.step1 {background-color: rgb(0, 158, 97);}
+.line1 {background-color: rgb(0, 158, 97);}
+.step2 {background-color: rgb(54, 54, 255);}
+.line2 {display: flex;}
+.line2 .sline:first-child {width: 100px; background-color: rgb(54, 54, 255); height: 6px;}
+.line2 .sline:last-child {width: 100px; background-color: rgb(146, 202, 255); height: 6px;}
+.step3 {background-color: rgb(146, 202, 255);}
+.state1 {color: rgb(0, 158, 97);}
+.state2 {color: rgb(54, 54, 255)}
+.state3 {color: rgb(146, 202, 255)}

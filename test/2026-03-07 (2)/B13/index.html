@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<link rel="stylesheet" href="../lib/lib.css">
+<body class="center">
+  <video src="./test-video.mp4" id="video"></video>
+  <div>
+    <button id="play">재생</button>
+    <button id="pause">중지</button>
+    <button id="tenPlus">10초 빨리감기</button>
+    <button id="tenMin">10초 뒤로감기</button>
+    <button id="sound">음소거</button>
+  </div>
+</body>
+<script>
+  play.onclick = () => video.play()
+  pause.onclick = () => video.pause()
+  tenPlus.onclick = () => video.currentTime += 10
+  tenMin.onclick = () => video.currentTime -= 10
+  sound.onclick = () => video.muted = !video.muted
+</script>
+</html>

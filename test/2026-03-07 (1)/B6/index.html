@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B6</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    .container {display: flex;gap: 40px;align-items: center;justify-content: center;}
+    .items, .dragZone {padding: 20px;width: 750px;height: 550px;display: grid;grid-template-columns: repeat(3, 1fr);gap: 20px;border: 1px solid black;}
+  </style>
+</head>
+<body class="center">
+  <div class="container">
+    <ul class="items">
+      <li class="item"><img src="./test1.gif"></li>
+      <li class="item"><img src="./test1.jpg"></li>
+      <li class="item"><img src="./test1.png"></li>
+      <li class="item"><img src="./test2.gif"></li>
+      <li class="item"><img src="./test2.jpg"></li>
+      <li class="item"><img src="./test2.png"></li>
+    </ul>
+    <div class="dragZone">
+      <p>이미지를 여기에 드래그하세요</p>
+    </div>
+    <button onclick="location.reload()">초기화</button>
+  </div>
+</body>
+<script src="../lib/lib.js"></script>
+<script>
+  const items = $$(".item")
+  const dragZone = $(".dragZone")
+
+  items.forEach(item => {
+    item.draggable = true
+    item.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/html", "")
+      e.currentTarget.classList.add("dragging")
+    })
+  })
+  dragZone.addEventListener("dragover", (e) => e.preventDefault())
+  dragZone.addEventListener("drop", () => {
+    const draggingItem = document.querySelector(".dragging")
+    if(draggingItem) dragZone.append(draggingItem)
+    $("p").style.display = "none"
+  })
+</script>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../lib/style.css">
+  <style>
+    .container {display: flex;flex-direction: column;gap: 60px;}
+    .top {display: flex;gap: 30px;align-items: center;}
+    [class*="cir"] {width: 50px;height: 50px;border-radius: 50%;}
+    .cir1 {background-color: green;}
+    .cir2 {background-color: blue;}
+    .cir3 {background-color: turquoise;}
+    [class*="line"] {height: 5px;width: 200px;}
+    .line1 {background-color: blue;}
+    .line2 {background-color: turquoise;}
+    .bot{display: flex;align-items: center;gap: 130px;}
+    .card {display: flex;flex-direction: column;gap: 10px;}
+    .card .title1 {color: green;}
+    .card .title2 {color: blue;}
+    .card .title3 {color: turquoise;}
+    h3 {font-size: 30px;}
+    .sub {color: gray;}
+  </style>
+</head>
+<body class="center">
+  <div class="container">
+    <div class="top">
+      <div class="cir1"></div>
+      <div class="line1"></div>
+      <div class="cir2"></div>
+      <div class="line2"></div>
+      <div class="cir3"></div>
+    </div>
+    <div class="bot">
+      <div class="card">
+        <p class="sub">STEP 1</p>
+        <h3>Card Details</h3>
+        <p class="title1">Completed</p>
+      </div>
+      <div class="card">
+        <p class="sub">STEP 2</p>
+        <h3>Form Review</h3>
+        <p class="title2">In progress</p>
+      </div>
+      <div class="card">
+        <p class="sub">STEP 3</p>
+        <h3>Authentication</h3>
+        <p class="title3">Pending</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

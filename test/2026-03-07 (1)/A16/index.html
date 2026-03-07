@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A16</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    ul {display: flex;flex-direction: column;gap: 50px;}
+    ul > div {display: flex;align-items: center;}
+    [class*="cir"] {width: 50px;height: 50px;border-radius: 50%;}
+    .cir1{background-color: green;}
+    .cir2{background-color: blue;}
+    .cir3{background-color: aqua;}
+    .top {gap: 30px;}
+    [class*="line"] {width: 200px;height: 3px;background-color: aquamarine;}
+    .line1{background-color: green;}
+    .line2{background-color: blue;}
+    .bot {gap: 130px;}
+    .bot .box {display: flex;flex-direction: column;gap: 10px;}
+    .sub{color: gray;}
+    h3 {font-size: 30px;font-weight: 500;}
+    .title1 {color: green;}
+    .title2{color: blue;}
+    .title3{color: gray;}
+  </style>
+</head>
+<body class="center">
+  <ul>
+    <div class="top">
+      <div class="cir1"></div>
+      <div class="line1"></div>
+      <div class="cir2"></div>
+      <div class="line2"></div>
+      <div class="cir3"></div>
+    </div>
+    <div class="bot">
+      <div class="box">
+        <p class="sub">STEP 1</p>
+        <h3>Card Details</h3>
+        <p class="title1">Completed</p>
+      </div>
+      <div class="box">
+        <p class="sub">STEP 2</p>
+        <h3>Form Reivew</h3>
+        <p class="title2">In progress</p>
+      </div>
+      <div class="box">
+        <p class="sub">STEP 3</p>
+        <h3>Authentication</h3>
+        <p class="title3">Pending</p>
+      </div>
+    </div>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../lib/lib.css">
+  <title>A3</title>
+  <style>
+    body:has(#light:checked) {background-color: #fff;}
+    body:has(#dark:checked) {background-color: #222;}
+    #dark:checked ~ [for="dark"] {display: none;}
+    #light:checked ~ [for="light"] {display: none;}
+    [for="dark"]{display: block; width: 100px;height: 50px;text-align: center;padding: 10px;color: yellow; background-color: rgb(2, 2, 129);}
+    [for="light"]{display: block;width: 100px;height: 50px; text-align: center;padding: 10px;color: white; background-color: gray;}
+    body{transition: .3s}
+  </style>
+</head>
+<body class="center">
+  <input type="radio" name="r" id="dark" hidden>
+  <input type="radio" name="r" id="light" checked hidden>
+
+  <label for="dark">다크 모드</label>
+  <label for="light">라이트 모드</label>
+</body>
+</html>

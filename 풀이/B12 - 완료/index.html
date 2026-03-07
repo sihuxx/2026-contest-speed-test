@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B12</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    #btns {display: flex;gap: 10px;margin-top: 20px;}
+    button {padding: 10px;}
+  </style>
+</head>
+<body class="center">
+  <input type="file" id="file" accept="image/*">
+  <img id="img">
+  <div id="btns">
+    <button data-filter="grayscale(100%)">흑백</button>
+    <button data-filter="sepia(100%)">세피아</button>
+    <button data-filter="invert(100%)">반전</button>
+    <button data-filter="none">원본</button>
+  </div>
+
+  <script src="../lib/lib.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

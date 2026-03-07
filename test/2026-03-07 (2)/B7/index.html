@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+  <style>
+    button {display: none;}
+  </style>
+</head>
+<body class="center">
+  <input type="text" maxlength="1">
+  <input type="text" maxlength="1">
+  <input type="text" maxlength="1">
+  <input type="text" maxlength="1">
+  <input type="text" maxlength="1">
+  <input type="text" maxlength="1">
+  <button>전송하기</button>
+</body>
+<script src="../lib/lib.js"></script>
+<script>
+  const inputs = $$("input")
+  
+  inputs.forEach((input, i) => {
+    input.addEventListener("keydown", (e) => {
+      if(e.key === "Backspace") {
+        if(i > 0 && input.value === "") {
+          inputs[i - 1].focus()
+        }
+       }
+    })
+    input.addEventListener("input", (e) => {
+      input.value = input.value.replace(/[^0-9]/g, "")
+      if(input.value.length === 1 && i < inputs.length - 1) {
+        inputs[i + 1].focus()
+      }
+      $("button").style.display = inputs.every(input => input.value.length === 1) ? "flex" : "none"
+    })
+  })
+</script>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B4</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+</head>
+<body class="center">
+ <div class="time"></div> 
+</body>
+<script src="../lib/lib.js"></script>
+<script>
+  const time = $(".time")
+  setInterval(() => time.textContent = new Date().toLocaleTimeString().slice(2), 10)
+</script>
+</html>
+<!-- 
+  * setTimeout
+    - 설정한 시간이 지나면 딱 한 번만 실행
+    - clearTimeout()로 취소
+    
+  * setInterval
+    - 설정한 시간 간격으로 계속 무한히 반복 실행
+    - clearInterval()로 중단
+-->

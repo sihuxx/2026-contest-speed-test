@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이미지 편집기</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+    }
+    h1 {
+      margin: 0 0 20px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .edit-area {
+      margin-bottom: 20px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #16213e;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .edit-area canvas {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .edit-area .placeholder {
+      color: #6a6a8a;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .toolbar button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #0f3460;
+      color: #eee;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toolbar button:hover {
+      background: #e94560;
+    }
+    .toolbar button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .toolbar button.download {
+      background: #0d7377;
+      margin-left: auto;
+    }
+    .toolbar button.download:hover {
+      background: #14a3a8;
+    }
+    .toolbar button.reset {
+      background: #4a4a6a;
+    }
+  </style>
+</head>
+<body>
+  <h1>이미지 편집기</h1>
+
+  <p style="margin-bottom: 12px;">
+    <input type="file" id="fileInput" accept="image/*">
+  </p>
+
+  <div class="edit-area" id="editArea">
+    <p class="placeholder" id="placeholder">이미지를 선택하면 여기에 표시됩니다</p>
+    <canvas id="canvas" style="display: none;"></canvas>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" data-type="rotate-left">좌측 90° 회전</button>
+    <button type="button" data-type="rotate-right">우측 90° 회전</button>
+    <button type="button" data-type="flip-h">좌우 반전</button>
+    <button type="button" data-type="flip-v">상하 반전</button>
+    <button type="button" data-type="filter-gray">흑백 필터</button>
+    <button type="button" data-type="reset">초기화</button>
+    <button type="button" data-type="download" class="download">다운로드</button>
+  </div>
+
+  <script src="common.js"></script>
+</body>
+</html>

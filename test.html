@@ -167,7 +167,6 @@
   </div>
 
   <script>
-    // PDF에서 추출한 문제 데이터
     const tasks = {
       a_easy: [
         { id: "A1", title: "Favicon 디자인", desc: '"B" 텍스트를 이용하여 웹 브라우저 탭에 표시될 16x16 픽셀 크기의 파비콘을 디자인하세요.' },
@@ -211,13 +210,64 @@
       ]
     };
 
-    // 랜덤 3개 추출 함수
+    let timerInterval;
+
+    // 페이지 로드 시 기존 세션 확인
+    window.onload = function() {
+      const savedStartTime = localStorage.getItem('examStartTime');
+      const savedTasks = localStorage.getItem('selectedTasks');
+
+      if (savedStartTime && savedTasks) {
+        const tasksObj = JSON.parse(savedTasks);
+        const startTime = parseInt(savedStartTime);
+        const currentTime = Math.floor(Date.now() / 1000);
+        const elapsed = currentTime - startTime;
+        const totalDuration = 90 * 60; // 90분
+        const remaining = totalDuration - elapsed;
+
+        if (remaining > 0) {
+          // 아직 시간이 남았으면 복구
+          restoreExam(tasksObj, remaining);
+        } else {
+          // 시간이 지났으면 초기화
+          clearExamData();
+        }
+      }
+    };
+
+    function startExam() {
+      const pickedTasks = {
+        a_easy: getRandomTasks(tasks.a_easy, 3),
+        a_medium: getRandomTasks(tasks.a_medium, 3),
+        b_easy: getRandomTasks(tasks.b_easy, 3),
+        b_medium: getRandomTasks(tasks.b_medium, 3)
+      };
+
+      // 상태 저장 (절대 시간으로 저장해야 새로고침 시 정확한 계산 가능)
+      localStorage.setItem('examStartTime', Math.floor(Date.now() / 1000).toString());
+      localStorage.setItem('selectedTasks', JSON.stringify(pickedTasks));
+
+      restoreExam(pickedTasks, 90 * 60);
+    }
+
+    function restoreExam(tasksObj, remainingTime) {
+      renderTasks('a-easy-grid', tasksObj.a_easy);
+      renderTasks('a-medium-grid', tasksObj.a_medium);
+      renderTasks('b-easy-grid', tasksObj.b_easy);
+      renderTasks('b-medium-grid', tasksObj.b_medium);
+
+      document.getElementById('intro-header').style.display = 'none';
+      document.getElementById('result-container').style.display = 'block';
+      document.getElementById('timer-container').style.display = 'block';
+
+      startTimer(remainingTime);
+    }
+
     function getRandomTasks(arr, num) {
       const shuffled = [...arr].sort(() => 0.5 - Math.random());
       return shuffled.slice(0, num);
     }
 
-    // 화면에 과제 렌더링
     function renderTasks(containerId, tasksArr) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
@@ -225,61 +275,41 @@
         const card = document.createElement('div');
         card.className = 'task-card';
         card.innerHTML = `
-                    <span class="task-id">${task.id}</span>
-                    <div class="task-title">${task.title}</div>
-                    <div class="task-desc">${task.desc}</div>
-                `;
+            <span class="task-id">${task.id}</span>
+            <div class="task-title">${task.title}</div>
+            <div class="task-desc">${task.desc}</div>
+        `;
         container.appendChild(card);
       });
     }
 
-    // 타이머 변수
-    let timerInterval;
-
-    // 메인 실행 함수
-    function startExam() {
-      // 1. 과제 추첨
-      const picked_A_Easy = getRandomTasks(tasks.a_easy, 3);
-      const picked_A_Medium = getRandomTasks(tasks.a_medium, 3);
-      const picked_B_Easy = getRandomTasks(tasks.b_easy, 3);
-      const picked_B_Medium = getRandomTasks(tasks.b_medium, 3);
-
-      // 2. 화면 업데이트
-      renderTasks('a-easy-grid', picked_A_Easy);
-      renderTasks('a-medium-grid', picked_A_Medium);
-      renderTasks('b-easy-grid', picked_B_Easy);
-      renderTasks('b-medium-grid', picked_B_Medium);
-
-      // 3. UI 전환
-      document.getElementById('intro-header').style.display = 'none';
-      document.getElementById('result-container').style.display = 'block';
-      document.getElementById('timer-container').style.display = 'block';
-
-      // 4. 타이머 시작 (90분 = 5400초)
-      startTimer(90 * 60);
-    }
-
-    // 타이머 로직
-    function startTimer(durationInSeconds) {
-      clearInterval(timerInterval); // 기존 타이머가 있다면 초기화
-      let time = durationInSeconds;
+    function startTimer(duration) {
+      clearInterval(timerInterval);
+      let time = duration;
       const display = document.getElementById('time-display');
 
-      timerInterval = setInterval(() => {
+      function updateTimer() {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
 
-        const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-        const secondsStr = seconds < 10 ? '0' + seconds : seconds;
+        display.textContent = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
-        display.textContent = `${minutesStr}:${secondsStr}`;
-
-        if (--time < 0) {
+        if (time <= 0) {
           clearInterval(timerInterval);
           display.textContent = "종료되었습니다";
-          alert("90분의 시험 시간이 모두 종료되었습니다!");
+          clearExamData();
+          alert("시험 시간이 종료되었습니다!");
         }
-      }, 1000);
+        time--;
+      }
+
+      updateTimer(); // 즉시 실행
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function clearExamData() {
+      localStorage.removeItem('examStartTime');
+      localStorage.removeItem('selectedTasks');
     }
   </script>
 </body>
