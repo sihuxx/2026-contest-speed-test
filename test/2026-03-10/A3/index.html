@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {transition: .3s;}
+    body:has(#light:checked) {background-color: #fff;}
+    body:has(#dark:checked) {background-color: #222;}
+    #light:checked ~ [for="light"] {display: none;}
+    #dark:checked ~ [for="dark"] {display: none;}
+    [for="light"] {width: 100px;height: 50px;background-color: gray;color: white;display: flex;justify-content: center;align-items: center;}
+    [for="dark"] {width: 100px;height: 50px;background-color: darkblue;color: yellow;display: flex;justify-content: center;align-items: center;}
+  </style>
+</head>
+<body>
+  <input type="radio" name="m" id="light" hidden>
+  <input type="radio" name="m" id="dark" hidden checked>
+  <label for="light">라이트 모드</label>
+  <label for="dark">다크 모드</label>
+</body>
+</html>

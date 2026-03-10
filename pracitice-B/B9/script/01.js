@@ -14,7 +14,7 @@ class star {
 
     this.datas.map(e => {
       const newdiv = newEl("div", {
-        innerHTML: `<div><h1>${e.name}</h1><p>${e.desc}</p><div class="star">${e.isStar ? "★" : "☆"}</div></div>`
+        innerHTML: `<div><h1>${e.name}</h1><p>${e.desc}</p><div class="star">${e.isStar ? "★" : "ㅁ"}</div></div>`
       })
       newdiv.querySelector(".star").addEventListener("click", () => {
         e.isStar = !e.isStar
