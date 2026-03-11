@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../lib/lib.css">
+</head>
+<body class="center">
+  <div id="time"></div>
+</body>
+<script>
+  setInterval(() => time.textContent = new Date().toLocaleTimeString().slice(2))
+</script>
+</html>

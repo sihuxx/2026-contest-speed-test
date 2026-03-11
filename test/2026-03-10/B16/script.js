@@ -1,10 +1,10 @@
 const { todos } = await fetch("./todos.json").then(res => res.json())
 
-const sevices = {
+const services = {
   "전체": () => todos,
   "완료": () => todos.filter(todo => todo.completed),
   "진행중": () => todos.filter(todo => !todo.completed),
-  "높은 우선순위": () => todos.filter(todo => !todo.priority === "high"),
+  "높은 우선순위": () => todos.filter(todo => todo.priority === "high"),
 }
 const priority = {
   "high": {"class": "priority-high", "text": "높음"}, 
@@ -14,12 +14,40 @@ const priority = {
 const todoList = $("#todoList")
 const filterBtn = $$(".filter-btn")
 
-$("#totalCount").textContent = sevices["전체"]().length
-$("#completedCount").textContent = sevices["완료"]().length
-$("#pendingCount").textContent = sevices["진행중"]().length
+$("#totalCount").textContent = services["전체"]().length
+$("#completedCount").textContent = services["완료"]().length
+$("#pendingCount").textContent = services["진행중"]().length
 
 let state = {activeFilter: "전체"}
 
 filterBtn.forEach(btn => btn.addEventListener("click",() => {
   state.activeFilter = btn.textContent
+  render()
 }))
+
+function render() {
+  filterBtn.forEach(btn => btn.classList.toggle("active", btn.textContent === state.activeFilter))
+  todoList.innerHTML = ""
+  const todoItem = services[state.activeFilter]().map(todo =>
+    newEl("div", {
+      className: `todo-item ${todo.compelted ? "completed" : ""}`,
+      innerHTML: ` <div class="todo-header">
+          <h3 class="todo-title">${todo.title}</h3>
+          <div class="todo-badges">
+              <span class="badge ${priority[todo.priority].class}">${priority[todo.priority].text}</span>
+              <span class="badge status-badge">진행중</span>
+          </div>
+      </div>
+      <p class="todo-description">${todo.description}</p>
+      <div class="todo-footer">
+          <div class="date-info">
+              <span>📅 마감: ${todo.dueDate}</span>
+              <span>📝 생성: ${todo.createdAt}</span>
+          </div>
+      </div>`,
+    })
+  )
+  todoList.append(...todoItem)
+}
+
+render()
