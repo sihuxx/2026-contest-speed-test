@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    img {width: 200px;height: 200px;}
+  </style>
+</head>
+<body>
+  <img src="https://i.namu.wiki/i/qQZAMlhN8yho4DLpbBYK1YIjLwLTmHsb6wGrv6iDH9xi1Fv0iy4w-lAIum5XH2ZHMn9Pxdpm8cp99kaw0xcx3A.webp" alt="">
+</body>
+<script>
+  const img = document.querySelector("img")
+  let x = 0, y = 0
+  const moves = {
+    "ArrowUp": [0, -10], "ArrowDown": [0, 10],
+    "ArrowLeft": [-10, 0], "ArrowRight": [10,0]
+  }
+  window.addEventListener("keydown", (e) => {
+    if(!e.key[moves]) return
+    const [dx, dy] = moves[e.key]
+    const limitX = (window.innerWidth - img.offsetWidth) / 2
+    const limitY = (window.innerHeight - img.offsetHeight) / 2
+    x = Math.max(-limitX, Math.min(limitX, x +  dx))
+    y = Math.max(-limitY, Math.min(limitY, y +  dy))
+    img.style.transform = `translate(${x}px, ${y}px)`
+  })
+</script>
+</html>

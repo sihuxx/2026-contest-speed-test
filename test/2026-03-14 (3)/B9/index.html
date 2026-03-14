@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+<script>
+  const newEl = (e, n) => Object.assign(document.createElement(e), n)
+  class star {
+    constructor() {
+      this.datas = JSON.parse(localStorage.getItem("star")) || this.getData()
+      this.render()
+    }
+    update(nd) {
+      this.render()
+      this.datas = nd
+      localStorage.setItem("star", JSON.stringify(this.datas))
+    }
+    render() {
+      container.innerHTML = ""
+      this.datas.map(e => {
+        const newDiv = newEl("div", {
+          innerHTML: `<h1>${e.name}</h1><p>${e.desc}</p><div class="star">${e.isStar ? "★" :"☆"}</div>`
+        })
+        newDiv.querySelector(".star").addEventListener("click", () => {
+          e.isStar = !e.isStar
+          this.update(this.datas)
+        })
+        container.append(newDiv)
+      })
+    }
+    async getData() {
+      const data = await fetch("./data.json").then(res => res.json())
+      this.update(data)
+    }
+  }
+  new star
+</script>
+</html>

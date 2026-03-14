@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    img {width: 500px;;}
+  </style>
+</head>
+<body>
+  <input type="file" id="file">
+  <img src="" id="img">
+  <div id="btns">
+    <button data-filter="grayscale(100%)">흑백</button>
+    <button data-filter="sepia(100%)">세피아</button>
+    <button data-filter="invert(100%)">반전</button>
+    <button data-filter="none">원본</button>
+  </div>
+</body>
+<script>
+  file.onchange =(e) => img.src = URL.createObjectURL(e.target.files[0])
+  btns.onclick = (e) => img.style.filter =  e.target.dataset.filter
+</script>
+</html>

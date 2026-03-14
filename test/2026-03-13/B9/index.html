@@ -16,9 +16,9 @@
       this.render()
     }
     update(nd) {
-      this.render()
       this.datas = nd
       localStorage.setItem("star", JSON.stringify(this.datas))
+      this.render()
     }
     render() {
       container.innerHTML = ""
