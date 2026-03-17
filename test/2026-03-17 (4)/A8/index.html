@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../lib/lib.css">
+    <style>
+        .container {display: flex;flex-direction: column;width: 1000px;}
+        .product {display: flex;align-items: center;justify-content: space-between; padding: 20px;width: 1000px;border-bottom: 1px solid gray;}
+        .cl {display: flex;flex-direction: column;}
+        .df {display: flex;align-items: center;gap: 30px;}
+        header {width: 1000px;display: flex;align-items: center;justify-content: center;color: white; background-color: rgb(35, 35, 35);}
+        footer > div {height: 80px;align-items: center; border-bottom: 1px solid rgba(128, 128, 128, 0.592); display: flex;justify-content: space-between;}
+        .title {font-weight: bold;}
+        .count {display: flex;align-items: center;gap: 10px;}
+        .count span {width: 30px;height: 30px;display: flex;justify-content: center;align-items: center;border: 1px solid gray;}
+        .price {display: flex;align-items: center;gap: 30px;}
+        .close {background-color: red;color: white;width: 30px;height: 30px;border-radius: 50%;display: flex;justify-content: center;align-items: center;}
+    </style>
+</head>
+<body class="center">
+    <div class="container">
+        <header>
+            <h1>장바구니</h1>
+        </header>
+        <main>
+            <div class="product">
+                <div class="df">
+                    <img src="./images/tshirt.jpg">
+                <div class="cl">
+                    <div class="title">WorldSkills 공식 티셔츠</div>
+                    <div class="sub">색상: 네이비</div>
+                    <div class="sub">사이즈: L</div>
+                </div>
+                </div>
+                <div class="count">
+                    <span>-</span>
+                    <p>2</p>
+                    <span>+</span>
+                </div>
+                <div class="price">
+                    <div class="title">25,000원</div>
+                    <span class="close">×</span>
+                </div>
+            </div>
+            <div class="product">
+                <div class="df">
+                    <img src="./images/book.jpg">
+                <div class="cl">
+                    <div class="title">기능경기 가이드북</div>
+                    <div class="sub">종류: 웹디자인</div>
+                    <div class="sub">2026년 최신판</div>
+                </div>
+                </div>
+                <div class="count">
+                    <span>-</span>
+                    <p>2</p>
+                    <span>+</span>
+                </div>
+                <div class="price">
+                    <div class="title">15,000원</div>
+                    <span class="close">×</span>
+                </div>
+            </div>
+            <div class="product">
+                <div class="df">
+                    <img src="./images/laptop-case.jpg">
+                <div class="cl">
+                    <div class="title">WorldSkills 노트북 파우치</div>
+                    <div class="sub">색상: 블랙</div>
+                    <div class="sub">15인치 호환</div>
+                </div>
+                </div>
+                <div class="count">
+                    <span>-</span>
+                    <p>2</p>
+                    <span>+</span>
+                </div>
+                <div class="price">
+                    <div class="title">35,000원</div>
+                    <span class="close">×</span>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="top">
+                <div class="cl">
+                    <p>상품금액</p>
+                    <p>75,000원</p>
+                </div>
+                <div class="cl">
+                    <p>배송비</p>
+                    <p>3,000원</p>
+                </div>
+            </div>
+            <div class="mid">
+                <p>총 결제금액</p>
+                <p>78,000원</p>
+            </div>
+            <div class="bot">
+                <button>쇼핑 계속하기</button>
+                <button class="grn">주문하기</button>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

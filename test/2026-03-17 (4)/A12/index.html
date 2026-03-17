@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../lib/lib.css">
+    <style>
+        .circle {width: 30px;height: 30px;border-radius: 50%;position: absolute;}
+        .circle1 {animation: loading 2s infinite; background-color: red;}
+        .circle2 {animation: loading2 2s infinite; background-color: yellow;}
+        .circle3 {animation: loading3 2s infinite; background-color: greenyellow;}
+        .circle4 {animation: loading4 2s infinite; background-color: blue;}
+        @keyframes loading {
+            0% {transform: translate(0, 0);}
+        }
+    </style>
+</head>
+<body class="center">
+    <div class="circle1 circle"></div>
+    <div class="circle2 circle"></div>
+    <div class="circle3 circle"></div>
+    <div class="circle4 circle"></div>
+</body>
+</html>

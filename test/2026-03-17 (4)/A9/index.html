@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../lib/lib.css">
+    <style>
+        body {background-image: url(./images/background.png);background-repeat: no-repeat;background-size: cover;}
+        img {width: 300px;height: 400px;}
+        .track {width: 100%;height: 100vh;;overflow: hidden;}
+        ul {transition: .5s; width: 300%;height: 100%; display: flex;align-items: center;}
+        li {width: 100%;display: flex;align-items: center;justify-content: center;gap: 100px;}
+        .card * {color: white;}
+        .nav{border: 1px solid white; width: 30px;height: 30px;color: white;background-color: rgba(255, 255, 255, 0.1);display: none;justify-content: center;align-items: center; position: absolute;bottom: 70px;}
+        .prev-btn {left: 50%;}
+        .next-btn {left: 52%;}
+
+        #s1:checked ~ .track ul {transform: translateX(0);}
+        #s2:checked ~ .track ul {transform: translateX(-100vw);}
+        #s3:checked ~ .track ul {transform: translateX(-200vw);}
+
+        #s1:checked ~ .track .p1, #s1:checked ~ .track .n1 {display: flex;}
+        #s2:checked ~ .track .p2, #s2:checked ~ .track .n2 {display: flex;}
+        #s3:checked ~ .track .p3, #s3:checked ~ .track .n3 {display: flex;}
+    </style>
+</head>
+<body>
+    <input type="radio" name="r" id="s1" hidden checked>
+    <input type="radio" name="r" id="s2" hidden>
+    <input type="radio" name="r" id="s3" hidden>
+    <div class="track">
+        <ul>
+            <li>
+                <div class="card"><img src="./images/1.jpg"><h3>삼나무와 초록 밀밭</h3><p>Cypresses and Green Wheat Field</p><p>Vincent van Gogh</p><p>1889</p></div>
+                <div class="card"><img src="./images/2.jpg"><h3>모델과 화가</h3><p>The Painter and His Model</p><p>Pablo Picasso</p><p>1928</p></div>
+                <div class="card"><img src="./images/3.jpg"><h3>작은 거리</h3><p>The Little Street</p><p>Johannes Vermeer</p><p>1657–1658</p></div>
+            </li>
+            <li>
+                <div class="card"><img src="./images/4.jpg"><h3>빈도 알토비티의 초상</h3><p>Portrait of Bindo Altoviti</p><p>Raphael</p><p>1515</p></div>
+                <div class="card"><img src="./images/5.jpg"><h3>나르시스의 변형</h3><p>The Metamorphosis of Narcissus</p><p>Salvador Dalí</p><p>1937</p></div>
+                <div class="card"><img src="./images/6.jpg"><h3>베노아의 성모</h3><p>The Benois Madonna</p><p>Leonardo da Vinci</p><p>1478–1480</p></div>
+            </li>
+            <li>
+                <div class="card"><img src="./images/7.jpg"><h3>과일 바구니를 든 소년</h3><p>Boy with a Basket of Fruit</p><p>Caravaggio</p><p>1593–1594</p></div>
+                <div class="card"><img src="./images/8.jpg"><h3>들쥐</h3><p>Young Hare</p><p>Albrecht Dürer</p><p>1502</p></div>
+                <div class="card"><img src="./images/9.jpg"><h3>톨레도 풍경</h3><p>View of Toledo</p><p>El Greco</p><p>1596–1600</p></div>
+            </li>
+        </ul>
+        <label for="s1" class="prev-btn nav p1">&lt;</label>
+        <label for="s2" class="next-btn nav n1">&gt;</label>
+        <label for="s1" class="prev-btn nav p2">&lt;</label>
+        <label for="s3" class="next-btn nav n2">&gt;</label>
+        <label for="s2" class="prev-btn nav p3">&lt;</label>
+        <label for="s3" class="next-btn nav n3">&gt;</label>
+    </div>
+</body>
+</html>
