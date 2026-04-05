@@ -9,11 +9,11 @@ const prevBtn = $(".prev-btn")
 const nextBtn = $(".next-btn")
 
 function setState(newState) {
-  state = { ...state, ...newState }
+  state = {...state, ...newState}
   render()
 }
 
-pageBtns.forEach(btn => btn.addEventListener('click', () => {
+pageBtns.forEach(btn => btn.addEventListener("click", () => {
   setState({ page: Number(btn.textContent) })
 }))
 prevBtn.addEventListener("click", () => {
@@ -30,15 +30,15 @@ function render() {
   nextBtn.disabled = state.page === 5
 
   pageBtns.forEach((btn, i) => {
-    btn.classList.remove('active')
-    btn.classList.remove('page-info')
+    btn.classList.remove("active")
+    btn.classList.remove("page-info")
     btn.textContent = i + 1
 
     if(state.page === i + 1) btn.classList.add("active")
     if(state.page === 1 && i === 4 || state.page === 5 && i === 1) {
-      btn.classList.add('page-info')
       btn.textContent = "..."
-    } 
+      btn.classList.add("page-info")
+    }
   })
 }
 render()
