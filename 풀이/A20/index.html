@@ -19,9 +19,13 @@
   /* ── 골드 액자 ── */
   .frame {
     padding: 18px;
-    background: #c9a227;
+    background: linear-gradient(135deg, #e8c84a 0%, #c9a227 30%, #f0d060 50%, #c9a227 70%, #a07010 100%);
     border-radius: 4px;
-    box-shadow: 0 8px 48px rgba(0,0,0,.7);
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,200,0.5),
+      inset 0 -2px 4px rgba(0,0,0,0.4),
+      0 12px 60px rgba(0,0,0,.8),
+      0 4px 16px rgba(0,0,0,.5);
   }
 
   /* ── 뷰포트 ── */
@@ -29,9 +33,8 @@
     width: 920px;
     height: 680px;
     position: relative;
-    perspective: 1200px;
-    perspective-origin: 50% 50%;
-    overflow: visible;
+    overflow: hidden;
+    border-radius: 2px;
   }
 
   /* ── 공통 슬라이드 레이어 ── */
@@ -48,65 +51,61 @@
     pointer-events: none;
   }
 
-  /*
-  ══════════════════════════════════════
-  구조:
-  · .bg-layer  : 항상 뒤에 깔린 레이어 (z-index 1)
-                 현재 활성 이미지 표시
-  · .fg-layer  : 항상 앞에 있는 레이어 (z-index 2)
-                 접히는 페이지 = 이전 이미지
-                 transform-origin: left center
-                 rotateY: 0deg(펼침) → -100deg(접힘)
-
-  각 슬라이드는 .page-N 으로 명명
-  s1:checked → page-1 active
-  s2:checked → page-2 active
-  ...
-
-  page-N이 active일 때:
-    · bg-layer에 N번 이미지 표시
-    · fg-layer에 N번 이미지를 rotateY(0deg) → 펼쳐진 상태
-
-  page-N+1이 active가 되면:
-    · 이전 page-N의 fg가 rotateY(-100deg)로 접힘
-    · bg-layer는 이미 N+1 이미지를 깔고 있음
-
-  ★ 핵심: display 전환 없이 opacity+transform만 사용
-  ══════════════════════════════════════
-  */
-
-  /* ── BG 레이어: 항상 표시, z-index 낮음 ── */
-  .bg-layer {
-    z-index: 1;
-  }
-
-  /* ── FG 레이어: z-index 높음, 접히는 페이지 ── */
-  .fg-layer {
-    z-index: 2;
-    transform-origin: left center;
-    transform: rotateY(0deg);
-    transition: transform .8s cubic-bezier(.4, 0, .2, 1);
-    box-shadow: -8px 0 32px rgba(0,0,0,.4);
-  }
-
-  /* ══ 각 페이지 기본: bg/fg 모두 숨김 ══ */
-  .page { position: absolute; inset: 0; pointer-events: none; }
-
-  /* bg는 항상 뒤에 깔림 (visibility로 제어해 transition 보장) */
-  .page .bg-layer { visibility: hidden; }
-  .page .fg-layer {
-    opacity: 0;
-    transform: rotateY(-100deg); /* 기본: 접힌 상태 */
+  /* ── 각 페이지 ── */
+  .page {
+    position: absolute;
+    inset: 0;
     pointer-events: none;
   }
 
-  /* ══════════════════════════════
-     s1 체크 → page-1 활성
-     · bg: img1 표시
-     · fg: img1, rotateY(0deg) 펼침
-  ══════════════════════════════ */
+  /* BG 레이어: 뒤에 깔림 */
+  .bg-layer {
+    z-index: 1;
+    visibility: hidden;
+  }
 
-  /* 활성 페이지: bg 표시 */
+  /* FG 레이어: 앞에서 접히는 페이지 */
+  .fg-layer {
+    z-index: 2;
+    transform-origin: left center;
+    transform: rotateY(-100deg);
+    opacity: 0;
+    pointer-events: none;
+    /* perspective를 fg-layer 부모가 아닌 여기서 직접 줌 */
+    perspective: 1200px;
+    perspective-origin: left center;
+  }
+
+  /* fg 내부 실제 flip 패널 */
+  .fg-layer .panel {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: rotateY(0deg);
+  }
+
+  /* fg-layer 자체 transition */
+  .fg-layer {
+    transition:
+      opacity 0s,
+      transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 페이지 안쪽 그림자 (접힐 때 깊이감) */
+  .fg-layer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0) 70%, rgba(0,0,0,0.45) 100%);
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  /* ── 활성 페이지: bg 표시, fg 펼침 ── */
   #s1:checked ~ .frame .vp .page-1 .bg-layer,
   #s2:checked ~ .frame .vp .page-2 .bg-layer,
   #s3:checked ~ .frame .vp .page-3 .bg-layer,
@@ -116,7 +115,6 @@
     z-index: 1;
   }
 
-  /* 활성 페이지: fg 펼침 */
   #s1:checked ~ .frame .vp .page-1 .fg-layer,
   #s2:checked ~ .frame .vp .page-2 .fg-layer,
   #s3:checked ~ .frame .vp .page-3 .fg-layer,
@@ -127,84 +125,150 @@
     pointer-events: auto;
   }
 
-  /* ══ 전환 애니메이션:
-     sN+1이 체크되면 → 이전 page-N의 fg가 접힘
-     동시에 page-N+1의 bg가 뒤에 보임 (이미 bg-layer visibility:visible로 처리됨)
-  ══ */
-
-  /* s2 체크 → page-1 fg 접힘, page-2 bg가 뒤에 */
+  /* ── 전환: sN+1 체크 → 이전 page-N fg가 왼쪽으로 접힘 ── */
   #s2:checked ~ .frame .vp .page-1 .bg-layer { visibility: visible; z-index: 3; }
   #s2:checked ~ .frame .vp .page-1 .fg-layer {
     opacity: 1;
     transform: rotateY(-100deg);
     z-index: 4;
   }
+  #s2:checked ~ .frame .vp .page-1 .fg-layer::after { opacity: 1; }
   #s2:checked ~ .frame .vp .page-2 .bg-layer { z-index: 2; }
 
-  /* s3 체크 → page-2 fg 접힘 */
   #s3:checked ~ .frame .vp .page-2 .bg-layer { visibility: visible; z-index: 3; }
   #s3:checked ~ .frame .vp .page-2 .fg-layer {
     opacity: 1;
     transform: rotateY(-100deg);
     z-index: 4;
   }
+  #s3:checked ~ .frame .vp .page-2 .fg-layer::after { opacity: 1; }
   #s3:checked ~ .frame .vp .page-3 .bg-layer { z-index: 2; }
 
-  /* s4 체크 → page-3 fg 접힘 */
   #s4:checked ~ .frame .vp .page-3 .bg-layer { visibility: visible; z-index: 3; }
   #s4:checked ~ .frame .vp .page-3 .fg-layer {
     opacity: 1;
     transform: rotateY(-100deg);
     z-index: 4;
   }
+  #s4:checked ~ .frame .vp .page-3 .fg-layer::after { opacity: 1; }
   #s4:checked ~ .frame .vp .page-4 .bg-layer { z-index: 2; }
 
-  /* s5 체크 → page-4 fg 접힘 */
   #s5:checked ~ .frame .vp .page-4 .bg-layer { visibility: visible; z-index: 3; }
   #s5:checked ~ .frame .vp .page-4 .fg-layer {
     opacity: 1;
     transform: rotateY(-100deg);
     z-index: 4;
   }
+  #s5:checked ~ .frame .vp .page-4 .fg-layer::after { opacity: 1; }
   #s5:checked ~ .frame .vp .page-5 .bg-layer { z-index: 2; }
 
-  /* s1 체크 (순환) → page-5 fg 접힘 */
+  /* 순환: s1 → page-5 접힘 */
   #s1:checked ~ .frame .vp .page-5 .bg-layer { visibility: visible; z-index: 3; }
   #s1:checked ~ .frame .vp .page-5 .fg-layer {
     opacity: 1;
     transform: rotateY(-100deg);
     z-index: 4;
   }
+  #s1:checked ~ .frame .vp .page-5 .fg-layer::after { opacity: 1; }
 
-  /* ══ 버튼 ══ */
+  /* ── 접힐 때 측면 그림자 오버레이 ── */
+  .fold-shadow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: linear-gradient(to right,
+      rgba(0,0,0,0.0) 0%,
+      rgba(0,0,0,0.0) 50%,
+      rgba(0,0,0,0.35) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  #s2:checked ~ .frame .vp .page-1 .fold-shadow,
+  #s3:checked ~ .frame .vp .page-2 .fold-shadow,
+  #s4:checked ~ .frame .vp .page-3 .fold-shadow,
+  #s5:checked ~ .frame .vp .page-4 .fold-shadow,
+  #s1:checked ~ .frame .vp .page-5 .fold-shadow {
+    opacity: 1;
+  }
+
+  /* ── 뒤에 깔리는 페이지 왼쪽 가장자리 그림자 ── */
+  .bg-layer::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(to right, rgba(0,0,0,0.3), transparent);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── 버튼 ── */
   .nav {
     position: absolute;
-    bottom: 40px; left: 50%;
+    bottom: 36px; left: 50%;
     transform: translateX(-50%);
     display: none;
-    gap: 200px;
+    gap: 220px;
     z-index: 30;
     pointer-events: auto;
   }
   .nav label {
     width: 52px; height: 52px;
-    background: rgba(20,20,20,.76);
+    background: rgba(15,15,15,.72);
     border-radius: 4px;
-    color: #fff; font-size: 1.5rem;
+    color: #fff; font-size: 1.6rem;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    backdrop-filter: blur(4px);
-    transition: background .2s;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: background .2s, transform .15s;
     user-select: none;
-    pointer-events: auto;
   }
-  .nav label:hover { background: rgba(80,80,80,.92); }
+  .nav label:hover {
+    background: rgba(70,70,70,.9);
+    transform: scale(1.08);
+  }
+  .nav label:active { transform: scale(0.96); }
 
   #s1:checked ~ .frame .vp .nav1,
   #s2:checked ~ .frame .vp .nav2,
   #s3:checked ~ .frame .vp .nav3,
   #s4:checked ~ .frame .vp .nav4,
   #s5:checked ~ .frame .vp .nav5 { display: flex; }
+
+  /* ── 페이지 번호 인디케이터 ── */
+  .indicator {
+    position: absolute;
+    bottom: 52px; left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 8px;
+    z-index: 30;
+  }
+  .indicator span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    display: block;
+    transition: background 0.3s, transform 0.3s;
+  }
+
+  #s1:checked ~ .frame .vp .ind1,
+  #s2:checked ~ .frame .vp .ind2,
+  #s3:checked ~ .frame .vp .ind3,
+  #s4:checked ~ .frame .vp .ind4,
+  #s5:checked ~ .frame .vp .ind5 { display: flex; }
+
+  #s1:checked ~ .frame .vp .ind1 span:nth-child(1),
+  #s2:checked ~ .frame .vp .ind2 span:nth-child(2),
+  #s3:checked ~ .frame .vp .ind3 span:nth-child(3),
+  #s4:checked ~ .frame .vp .ind4 span:nth-child(4),
+  #s5:checked ~ .frame .vp .ind5 span:nth-child(5) {
+    background: #fff;
+    transform: scale(1.3);
+  }
 </style>
 </head>
 <body>
@@ -218,61 +282,59 @@
 <div class="frame">
   <div class="vp">
 
-    <!--
-      page-N:
-        bg-layer = 이 페이지의 이미지 (뒤에 깔림)
-        fg-layer = 이 페이지의 이미지 (앞에서 접힘)
-      → 활성 시 fg가 펼쳐져 있고
-        다음 페이지로 이동 시 fg가 rotateY(-100deg)로 접히면서
-        뒤에 있던 다음 페이지의 bg가 드러남
-    -->
-
     <div class="page page-1">
-      <div class="slide bg-layer"><img src="images/abu-dhabi.jpg" alt="1"></div>
-      <div class="slide fg-layer"><img src="images/abu-dhabi.jpg" alt="1"></div>
+      <div class="slide bg-layer">
+        <img src="images/abu-dhabi.jpg" alt="2">
+        <div class="fold-shadow"></div>
+      </div>
+      <div class="slide fg-layer"><img src="images/kazan.jpg" alt="1"></div>
     </div>
 
     <div class="page page-2">
-      <div class="slide bg-layer"><img src="images/kazan.jpg" alt="2"></div>
-      <div class="slide fg-layer"><img src="images/kazan.jpg" alt="2"></div>
+      <div class="slide bg-layer">
+        <img src="images/lyon.jpg" alt="3">
+        <div class="fold-shadow"></div>
+      </div>
+      <div class="slide fg-layer"><img src="images/abu-dhabi.jpg" alt="2"></div>
     </div>
 
     <div class="page page-3">
-      <div class="slide bg-layer"><img src="images/lyon.jpg" alt="3"></div>
+      <div class="slide bg-layer">
+        <img src="images/sao-paulo.jpg" alt="4">
+        <div class="fold-shadow"></div>
+      </div>
       <div class="slide fg-layer"><img src="images/lyon.jpg" alt="3"></div>
     </div>
 
     <div class="page page-4">
-      <div class="slide bg-layer"><img src="images/sao-paulo.jpg" alt="4"></div>
+      <div class="slide bg-layer">
+        <img src="images/shanghai.jpg" alt="5">
+        <div class="fold-shadow"></div>
+      </div>
       <div class="slide fg-layer"><img src="images/sao-paulo.jpg" alt="4"></div>
     </div>
 
     <div class="page page-5">
-      <div class="slide bg-layer"><img src="images/shanghai.jpg" alt="5"></div>
+      <div class="slide bg-layer">
+        <img src="images/kazan.jpg" alt="1">
+        <div class="fold-shadow"></div>
+      </div>
       <div class="slide fg-layer"><img src="images/shanghai.jpg" alt="5"></div>
     </div>
 
-    <!-- 버튼 세트 -->
-    <div class="nav nav1">
-      <label for="s5">&#8249;</label>
-      <label for="s2">&#8250;</label>
-    </div>
-    <div class="nav nav2">
-      <label for="s1">&#8249;</label>
-      <label for="s3">&#8250;</label>
-    </div>
-    <div class="nav nav3">
-      <label for="s2">&#8249;</label>
-      <label for="s4">&#8250;</label>
-    </div>
-    <div class="nav nav4">
-      <label for="s3">&#8249;</label>
-      <label for="s5">&#8250;</label>
-    </div>
-    <div class="nav nav5">
-      <label for="s4">&#8249;</label>
-      <label for="s1">&#8250;</label>
-    </div>
+    <!-- 버튼 -->
+    <div class="nav nav1"><label for="s5">&#8249;</label><label for="s2">&#8250;</label></div>
+    <div class="nav nav2"><label for="s1">&#8249;</label><label for="s3">&#8250;</label></div>
+    <div class="nav nav3"><label for="s2">&#8249;</label><label for="s4">&#8250;</label></div>
+    <div class="nav nav4"><label for="s3">&#8249;</label><label for="s5">&#8250;</label></div>
+    <div class="nav nav5"><label for="s4">&#8249;</label><label for="s1">&#8250;</label></div>
+
+    <!-- 인디케이터 -->
+    <div class="indicator ind1"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="indicator ind2"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="indicator ind3"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="indicator ind4"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="indicator ind5"><span></span><span></span><span></span><span></span><span></span></div>
 
   </div>
 </div>

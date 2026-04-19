@@ -1,4 +1,3 @@
-const input = $("input")
 const getPsw = pw => {
   const l = pw.length
   const u = /[A-Z]/.test(pw)
