@@ -1,38 +1,24 @@
-const time = $("time");
-let start, elapsed = 0, raf;
+let startTime = 0, elapsed = 0, id = null, run = false
 
-const btnList = { start: $("start"), stop: $("stop"), resume: $("resume"), reset: $("reset") };
+function timer(now) {
+  const time = now - startTime + elapsed
 
-const ui = (s) => {
-  btnList.start.className = s === 'init' ? '' : 'hidden';
-  btnList.stop.className = s === 'run' ? '' : 'hidden';
-  btnList.resume.className = s === 'stop' ? '' : 'hidden';
-  btnList.reset.className = s === 'init' ? 'hidden' : '';
-};
+  minute.innerHTML = String(Math.floor(time / 60000)).padStart(2, 0);
+  second.innerHTML = String(Math.floor((time % 60000) / 1000)).padStart(2, 0);
+  mili.innerHTML = String(Math.floor(time % 1000)).padStart(3, 0);
 
-const update = () => {
-  const ms = elapsed + (performance.now() - start);
-  time.textContent = new Date(ms).toISOString().slice(14, 23).replace(".", ":");
-  raf = requestAnimationFrame(update);
-};
+  id = requestAnimationFrame(timer)
+}
+function render() {
+  run = !run
 
-const run = (isStart) => {
-  if (isStart) {
-    start = performance.now();
-    update();
-    ui('run');
+  if (run) {
+    startTime = performance.now()
+    id = requestAnimationFrame(timer)
+    container.innerHTML = `<button onclick="render()">중지</button>`
   } else {
-    cancelAnimationFrame(raf);
-    elapsed += performance.now() - start;
-    ui('stop');
+    elapsed += performance.now() - startTime
+    cancelAnimationFrame(id)
+    container.innerHTML = `<button onclick="render()">계속</button>`
   }
-};
-btnList.start.onclick = () => run(true);
-btnList.resume.onclick = () => run(true);
-btnList.stop.onclick = () => run(false);
-btnList.reset.onclick = () => {
-  cancelAnimationFrame(raf);
-  elapsed = 0;
-  time.textContent = "00:00:000";
-  ui('init');
-};
+}
