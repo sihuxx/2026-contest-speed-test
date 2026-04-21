@@ -1,0 +1,6 @@
+.container {display: flex;flex-direction: column;gap: 50px;}
+.upload-zone {padding: 40px;border: 1px solid #eee;}
+.file-list {display: flex;flex-direction: column;gap: 20px;}
+.file-list li {width: 800px;justify-content: space-between; display: flex;padding: 10px;border: 1px solid #eee;}
+.dragging {opacity: 0.3;}
+.drag-over {border: 1px solid green !important;}
