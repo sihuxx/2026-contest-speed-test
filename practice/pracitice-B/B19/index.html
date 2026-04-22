@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{ margin: 0; padding: 0; box-sizing: border-box; }
+button{ border: 0; background: none; cursor: pointer; }
+
+.calendar{ padding: 1rem; width: 600px; }
+.calendar-header{ display: flex; justify-content: space-between; align-items: center; }
+.calendar-header button{  background: blue; color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; }
+.calendar-header .current-year{ font-size: 1.5rem; font-weight: bold; }
+
+.calendar-content{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; padding-top: 1rem; }
+.calendar-content div{ padding: 1rem; text-align: center; }
+.calendar-content .day.active{ background: skyblue !important; color: #fff !important; }
+.calendar-content .day:not(:empty){ background: #f0f0f0; }
+.calendar-content .day:nth-child(7n+1){ color:red; }
+.calendar-content .day:nth-child(7n){ color:blue; }
+  </style>
+</head>
+<body>
+    <div id="app">
+        <div class="calendar">
+            <div class="calendar-header">
+                <button type="button" class="btn-prev">← 이전</button>
+                <span class="current-year">2026</span>
+                <button type="button" class="btn-next">다음 →</button>
+            </div>
+            <div class="calendar-content"></div>
+        </div>
+    </div>
+  <script src="../lib/lib.js"></script>
+  <script src="./script/01.js"></script>
+</body>
+</html>

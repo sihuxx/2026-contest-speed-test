@@ -102,6 +102,12 @@ h1 {
     color: #3182ce;
     background: #bee3f8;
 }
+.cell.o::before{
+    content: 'O';
+}
+.cell.x::before{
+    content: 'X';
+}
 
 .cell.winning {
     background: #68d391 !important;

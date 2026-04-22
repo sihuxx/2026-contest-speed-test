@@ -11,21 +11,24 @@
         <h1>틱택토 게임</h1>
         
         <div class="game-board " id="gameBoard">
-            <div class="cell o" data-index="0">O</div>
-            <div class="cell o" data-index="1">O</div>
-            <div class="cell o" data-index="2">O</div>
-            <div class="cell x" data-index="3">X</div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell x" data-index="5">X</div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell x" data-index="7">X</div>
-            <div class="cell" data-index="8"></div>
+            <div class="cell" data-type="r1,c1,d1" data-index="0"></div>
+            <div class="cell" data-type="r1,c2" data-index="1"></div>
+            <div class="cell" data-type="r1,c3,d2" data-index="2"></div>
+
+            <div class="cell" data-type="r2,c1" data-index="3"></div>
+            <div class="cell" data-type="r2,c2,d1,d2" data-index="4"></div>
+            <div class="cell" data-type="r2,c3" data-index="5"></div>
+
+            <div class="cell" data-type="r3,c1,d2" data-index="6"></div>
+            <div class="cell" data-type="r3,c2" data-index="7"></div>
+            <div class="cell" data-type="r3,c3,d1" data-index="8"></div>
         </div>
 
         <div class="game-controls">
-            <button id="resetGame" class="btn btn-primary">게임 리셋</button>
+            <button id="resetGame" class="btn btn-primary" onclick="location.reload()">게임 리셋</button>
         </div>
-
     </div>
+    <script src="../lib/lib.js"></script>
+    <script src="./script/01.js"></script>
 </body>
 </html>
