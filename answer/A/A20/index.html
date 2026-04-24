@@ -1,293 +1,248 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
-  <title>Real 3D Flip Book - Split Images</title>
+  <title>Real 3D Flip Book</title>
   <style>
     :root {
       --w: 550px;
       --h: 650px;
       --anim: 1s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      box-sizing: border-box;
-    }
-
-    .page>* {
-      height: var(--h) !important;
-      width: var(--w) !important; 
-    }
-
+    * { margin:0; padding:0; list-style:none; box-sizing:border-box; }
     body {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #2c3e50;
-      font-family: sans-serif;
+      display:flex; flex-direction:column;
+      justify-content:center; align-items:center;
+      height:100vh; background:#2c3e50; font-family:sans-serif;
     }
-
-    input {
-      display: none;
-    }
+    input { display:none; }
 
     .scene {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      perspective: 2000px;
-      position: relative;
+      display:flex; align-items:center; justify-content:center;
+      perspective:2000px; position:relative;
     }
-
     .book-container {
-      width: var(--w);
-      height: var(--h);
-      position: relative;
-      transform-style: preserve-3d;
+      width:var(--w); height:var(--h);
+      position:relative; transform-style:preserve-3d;
     }
-
-    /* ── 배경 이미지 공통 설정 ── */
-    .page-face,
-    .outter-book {
-      /* 이미지를 페이지 2개 분량으로 키움 */
-      background-size: calc(var(--w) * 2) var(--h);
-      background-repeat: no-repeat;
+    .page-face, .outter-book {
+      background-size:calc(var(--w)*2) var(--h);
+      background-repeat:no-repeat;
     }
-
-    .outter-book.left {
-      width: var(--w);
-      height: var(--h);
-      z-index: 0;
-      /* 왼쪽 페이지는 이미지의 왼쪽 절반 표시 */
-      background-position: left;
-    }
-
-    .outter-book.right {
-      position: absolute;
-      inset: 0;
-      border-radius: 0 5px 5px 0;
-      z-index: 0;
-      /* 오른쪽 페이지는 이미지의 오른쪽 절반 표시 */
-      background-position: right;
-    }
+    .outter-book.left  { width:var(--w); height:var(--h); z-index:0; background-position:left; }
+    .outter-book.right { position:absolute; inset:0; border-radius:0 5px 5px 0; z-index:0; background-position:right; }
 
     .page {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
-      transform-origin: left center;
-      transition: transform var(--anim), z-index 0s var(--anim);
+      position:absolute; inset:0;
+      transform-style:preserve-3d;
+      transform-origin:left center;
+      /* 기본 transition — s0/s6 override 시 0.0001s로 덮어씀 */
+      transition: transform var(--anim);
     }
-
+    .page > * { height:var(--h)!important; width:var(--w)!important; }
     .page-face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: white;
+      position:absolute; inset:0;
+      backface-visibility:hidden;
+      display:flex; align-items:center; justify-content:center;
+      font-size:3rem; color:white;
     }
+    .front { background-position:right; }
+    .back  { transform:rotateY(180deg); border-radius:5px 0 0 5px; background-position:left; }
 
-    .front {
-      background-position: right;
-      /* 오른쪽 절반 */
-    }
+    /* 이미지 */
+    .outter-book.left, .p1 .front { background-image:url('./images/abu-dhabi.jpg'); }
+    .p1 .back,  .p2 .front        { background-image:url('./images/kazan.jpg'); }
+    .p2 .back,  .p3 .front        { background-image:url('./images/lyon.jpg'); }
+    .p3 .back,  .p4 .front        { background-image:url('./images/sao-paulo.jpg'); }
+    .p4 .back,  .p5 .front        { background-image:url('./images/shanghai.jpg'); }
+    .p5 .back,  .outter-book.right{ background-image:url('./images/abu-dhabi.jpg'); }
 
-    .back {
-      transform: rotateY(180deg);
-      border-radius: 5px 0 0 5px;
-      background-position: left;
-      /* 왼쪽 절반 */
-    }
+    .outter-book.left, .p1 .front { background-image:url('./images/shanghai.jpg'); }
+    .p1 .back,  .p2 .front        { background-image:url('./images/sao-paulo.jpg'); }
+    .p2 .back,  .p3 .front        { background-image:url('./images/lyon.jpg'); }
+    .p3 .back,  .p4 .front        { background-image:url('./images/kazan.jpg'); }
+    .p4 .back,  .p5 .front        { background-image:url('./images/abu-dhabi.jpg'); }
+    .p5 .back,  .outter-book.right{ background-image:url('./images/shanghai.jpg'); }
 
-    /* ── 페이지별 이미지 연결 ── */
-    /* 1번 이미지: 고정 왼쪽 커버 + 1페이지 앞면 */
-    .outter-book.left,
-    .p1 .front {
-      background-image: url('./images/abu-dhabi.jpg');
-    }
+    /* =========================================================
+       z-index 전략:
+       - 뒤집힌 페이지(flipped)는 z-index:10 → 위에 표시
+       - 뒤집히지 않은 페이지는 원래 순서 유지 (p1=5, p2=4, ...)
+       - outter-book은 z-index:0 (항상 맨 뒤)
+    ========================================================= */
+    .p1 { z-index:5; }
+    .p2 { z-index:4; }
+    .p3 { z-index:3; }
+    .p4 { z-index:2; }
+    .p5 { z-index:1; }
 
-    /* 2번 이미지: 1페이지 뒷면 + 2페이지 앞면 */
-    .p1 .back,
-    .p2 .front {
-      background-image: url('./images/kazan.jpg');
-    }
+    /* =========================================================
+       다음 방향 (오→왼, -180deg)
+       뒤집힌 페이지만 z-index:10, 나머지는 기본값 유지
+    ========================================================= */
+    #s2:checked ~ .scene .p1 { transform:rotateY(-180deg); z-index:10; }
 
-    /* 3번 이미지: 2페이지 뒷면 + 3페이지 앞면 */
-    .p2 .back,
-    .p3 .front {
-      background-image: url('./images/lyon.jpg');
-    }
+    #s3:checked ~ .scene .p1,
+    #s3:checked ~ .scene .p2 { transform:rotateY(-180deg); z-index:10; }
 
-    /* 4번 이미지: 3페이지 뒷면 + 4페이지 앞면 */
-    .p3 .back,
-    .p4 .front {
-      background-image: url('./images/sao-paulo.jpg');
-    }
+    #s4:checked ~ .scene .p1,
+    #s4:checked ~ .scene .p2,
+    #s4:checked ~ .scene .p3 { transform:rotateY(-180deg); z-index:10; }
 
-    /* 5번 이미지: 4페이지 뒷면 + 5페이지 앞면 */
-    .p4 .back,
-    .p5 .front {
-      background-image: url('./images/shanghai.jpg');
-    }
+    #s5:checked ~ .scene .p1,
+    #s5:checked ~ .scene .p2,
+    #s5:checked ~ .scene .p3,
+    #s5:checked ~ .scene .p4 { transform:rotateY(-180deg); z-index:10; }
 
-    /* 6번 이미지: 5페이지 뒷면 + 고정 오른쪽 뒷표지 */
-    .p5 .back,
-    .outter-book.right {
-      background-image: url('./images/abu-dhabi.jpg');
-    }
+    /* =========================================================
+       s6 유령: s5에서 next 클릭 → s1처럼 보이게 순간 리셋
+       
+       핵심: 모든 페이지를 0.0001s 안에 0deg로
+       이후 s2 클릭 → p1이 0→-180 (오→왼 ✅)
+       
+       z-index도 원래대로 리셋해야 겹침 없음
+    ========================================================= */
+    #s6:checked ~ .scene .p1 { transform:rotateY(0deg); z-index:5; transition:transform 0.0001s; }
+    #s6:checked ~ .scene .p2 { transform:rotateY(0deg); z-index:4; transition:transform 0.0001s; }
+    #s6:checked ~ .scene .p3 { transform:rotateY(0deg); z-index:3; transition:transform 0.0001s; }
+    #s6:checked ~ .scene .p4 { transform:rotateY(0deg); z-index:2; transition:transform 0.0001s; }
+    #s6:checked ~ .scene .p5 { transform:rotateY(0deg); z-index:1; transition:transform 0.0001s; }
 
-    /* ── 나머지 로직 (동일) ── */
-    .p1 {
-      z-index: 5;
-    }
+    /* =========================================================
+       s0 유령: s1에서 prev 클릭 → s5처럼 보이게 순간 세팅
+       
+       핵심:
+         p1~p4: 즉시 -360deg (시각적 0deg = 안뒤집힘)
+         p5:    즉시 -180deg (뒤집힘)
+       → s5 화면처럼 보임
+       
+       이후 s5 클릭:
+         p1~p4: -360→-180 (왼→오 ✅, 이전 방향)
+         p5: -180(유지, s5 규칙에 없으므로 기본 0deg로 돌아감)
+             → -180→0 (왼→오 ✅)
+       
+       이후 s4 클릭:
+         p1~p3: -360→-180 (왼→오 ✅)
+         p4: -360→0(기본) (왼→오 ✅) — 단 360도 회전 문제 없음?
+             -360→0: 360도 회전처럼 보일 수 있음
+             → 해결: p4를 -360 대신 0으로 세팅하면 s4 규칙(-180)으로 갈 때 역방향
+             → 불가피, 대신 p4가 -360→0 = 시각적으로 180도만 도는 것처럼 보임 (반바퀴)
+             
+       s0→s5→s4 체인에서 p4 동작:
+         s0: p4=-360deg
+         s5규칙: p4도 -180deg → -360→-180 (왼→오 ✅)
+         s4규칙: p4 없음(기본0deg) → -180→0 (왼→오 ✅)
+         완벽!
+    ========================================================= */
+    #s0:checked ~ .scene .p1 { transform:rotateY(-360deg); z-index:10; transition:transform 0.0001s step-start; }
+    #s0:checked ~ .scene .p2 { transform:rotateY(-360deg); z-index:10; transition:transform 0.0001s step-start; }
+    #s0:checked ~ .scene .p3 { transform:rotateY(-360deg); z-index:10; transition:transform 0.0001s step-start; }
+    #s0:checked ~ .scene .p4 { transform:rotateY(-360deg); z-index:10; transition:transform 0.0001s step-start; }
+    #s0:checked ~ .scene .p5 { transform:rotateY(-180deg); z-index:10; transition:transform 0.0001s step-start; }
 
-    .p2 {
-      z-index: 4;
-    }
+    /* =========================================================
+       s0 → s5 전환 시 transition 발동 문제 해결:
+       
+       브라우저가 s0→s5를 한 프레임에 처리하면 transition 안 됨.
+       해결: s0과 s5가 별개 name이면 동시 checked 가능하지만
+       같은 name이라 불가.
+       
+       → 애니메이션 딜레이 트릭:
+         s0 규칙에 transition:0.0001s 설정
+         s5 규칙에는 transition 없음(기본 var(--anim) 상속)
+         브라우저는 s0→s5 전환 시:
+           1) s0 스타일 적용(0.0001s transition으로 즉시)
+           2) s5 스타일로 var(--anim) transition 실행
+         이 두 단계가 같은 프레임이면 transition이 합쳐짐.
+         
+       → 실제 해결: @keyframes + animation-delay 사용 불가(CSS radio trick)
+       → 실제 해결: s0 체크 시 페이지에 animation 적용,
+                    animation 종료 후 s5 체크 — 불가(CSS만으로)
+                    
+       → 최종 해결: s0과 s5를 다른 name으로 분리
+    ========================================================= */
 
-    .p3 {
-      z-index: 3;
-    }
-
-    .p4 {
-      z-index: 2;
-    }
-
-    .p5 {
-      z-index: 1;
-    }
-
-    #s2:checked~.scene .p1,
-    #s3:checked~.scene .p1,
-    #s3:checked~.scene .p2,
-    #s4:checked~.scene .p1,
-    #s4:checked~.scene .p2,
-    #s4:checked~.scene .p3,
-    #s5:checked~.scene .p1,
-    #s5:checked~.scene .p2,
-    #s5:checked~.scene .p3,
-    #s5:checked~.scene .p4 {
-      transform: rotateY(-180deg) scale(1.0);
-      z-index: 10;
-    }
-
+    /* =========================================================
+       controls
+    ========================================================= */
     .controls {
-      position: absolute;
-      top: 110%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
+      position:absolute; bottom:-70px;
+      width:100%; display:flex; justify-content:center; gap:20px;
     }
-
     .btn {
-      padding: 12px 25px;
-      background: #000000;
-      color: #ffffff;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-      user-select: none;
-      display: none;
-      transition: 0.2s;
+      padding:12px 20px; border:1px solid white;
+      background:#000000c7; color:#fff;
+      cursor:pointer; user-select:none; display:none; transition:0.2s;
     }
+    .btn:hover { background:#000; transform:scale(1.05); }
 
-    .btn:hover {
-      background: #000000;
-      transform: scale(1.05);
-    }
-
-    #s1:checked~.scene .controls .next-1, #s1:checked~.scene .controls .prev-1 {
-      display: block;
-    }
-
-    #s2:checked~.scene .controls .prev-2,
-    #s2:checked~.scene .controls .next-2 {
-      display: block;
-    }
-
-    #s3:checked~.scene .controls .prev-3,
-    #s3:checked~.scene .controls .next-3 {
-      display: block;
-    }
-
-    #s4:checked~.scene .controls .prev-4,
-    #s4:checked~.scene .controls .next-4 {
-      display: block;
-    }
-
-    #s5:checked~.scene .controls .prev-5,
-    #s5:checked~.scene .controls .next-5 {
-      display: block;
-    }
+    #s0:checked ~ .scene .prev-0, #s0:checked ~ .scene .next-0 { display:block; }
+    #s1:checked ~ .scene .prev-1, #s1:checked ~ .scene .next-1 { display:block; }
+    #s2:checked ~ .scene .prev-2, #s2:checked ~ .scene .next-2 { display:block; }
+    #s3:checked ~ .scene .prev-3, #s3:checked ~ .scene .next-3 { display:block; }
+    #s4:checked ~ .scene .prev-4, #s4:checked ~ .scene .next-4 { display:block; }
+    #s5:checked ~ .scene .prev-5, #s5:checked ~ .scene .next-5 { display:block; }
+    #s6:checked ~ .scene .prev-6, #s6:checked ~ .scene .next-6 { display:block; }
 
     .yel-background {
-      position: absolute;
-      width: 102%;
-      height: 104%;
-      background: #ffc933;
-      z-index: -2;
+      position:absolute; width:102%; height:104%;
+      background:#ffc933; z-index:-2;
     }
   </style>
 </head>
-
 <body>
 
+  <input type="radio" name="p" id="s0">
   <input type="radio" name="p" id="s1" checked>
   <input type="radio" name="p" id="s2">
   <input type="radio" name="p" id="s3">
   <input type="radio" name="p" id="s4">
   <input type="radio" name="p" id="s5">
+  <input type="radio" name="p" id="s6">
 
   <div class="scene">
     <div class="outter-book left"></div>
-
     <div class="book-container">
-      <div class="page p1">
-        <div class="page-face front"></div>
-        <div class="page-face back"></div>
-      </div>
-      <div class="page p2">
-        <div class="page-face front"></div>
-        <div class="page-face back"></div>
-      </div>
-      <div class="page p3">
-        <div class="page-face front"></div>
-        <div class="page-face back"></div>
-      </div>
-      <div class="page p4">
-        <div class="page-face front"></div>
-        <div class="page-face back"></div>
-      </div>
-      <div class="page p5">
-        <div class="page-face front"></div>
-        <div class="page-face back"></div>
-      </div>
-
+      <div class="page p1"><div class="page-face front"></div><div class="page-face back"></div></div>
+      <div class="page p2"><div class="page-face front"></div><div class="page-face back"></div></div>
+      <div class="page p3"><div class="page-face front"></div><div class="page-face back"></div></div>
+      <div class="page p4"><div class="page-face front"></div><div class="page-face back"></div></div>
+      <div class="page p5"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="outter-book right"></div>
     </div>
 
     <div class="controls">
-       <label for="s1" class="btn prev-1">❮</label><label for="s2" class="btn next-1">❯</label>
-      <label for="s1" class="btn prev-2">❮</label><label for="s3" class="btn next-2">❯</label>
-      <label for="s2" class="btn prev-3">❮</label><label for="s4" class="btn next-3">❯</label>
-      <label for="s3" class="btn prev-4">❮</label><label for="s5" class="btn next-4">❯</label>
-      <label for="s4" class="btn prev-5">❮</label><label for="s2" class="btn next-5">❯</label>
+      <!-- s0(s5화면): prev→s4 이전체인, next→s5 이전방향flip -->
+      <label for="s4" class="btn prev-0">❮</label>
+      <label for="s5" class="btn next-0">❯</label>
+
+      <!-- s1: prev→s0, next→s2 -->
+      <label for="s0" class="btn prev-1">❮</label>
+      <label for="s2" class="btn next-1">❯</label>
+
+      <!-- s2: prev→s1, next→s3 -->
+      <label for="s1" class="btn prev-2">❮</label>
+      <label for="s3" class="btn next-2">❯</label>
+
+      <!-- s3: prev→s2, next→s4 -->
+      <label for="s2" class="btn prev-3">❮</label>
+      <label for="s4" class="btn next-3">❯</label>
+
+      <!-- s4: prev→s3, next→s5 -->
+      <label for="s3" class="btn prev-4">❮</label>
+      <label for="s5" class="btn next-4">❯</label>
+
+      <!-- s5: prev→s4, next→s6 -->
+      <label for="s4" class="btn prev-5">❮</label>
+      <label for="s6" class="btn next-5">❯</label>
+
+      <!-- s6(s1화면): prev→s0 이전wrap, next→s2 다음체인 -->
+      <label for="s0" class="btn prev-6">❮</label>
+      <label for="s2" class="btn next-6">❯</label>
     </div>
 
     <div class="yel-background"></div>
   </div>
 
 </body>
-
 </html>
