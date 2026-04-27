@@ -76,11 +76,6 @@
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: white;
     }
 
     .front { background-position: right; }
@@ -90,128 +85,115 @@
       background-position: left;
     }
 
-    /* ════════════════════════════════════
+    /* ══════════════════════════════════════
        이미지 매핑
-       순서: 1=abu-dhabi 2=kazan 3=lyon 4=sao-paulo 5=shanghai
-    ════════════════════════════════════ */
-
-    /* 고정 배경 */
+       1=abu-dhabi 2=kazan 3=lyon 4=sao-paulo 5=shanghai
+    ══════════════════════════════════════ */
     .outter-book.left  { background-image: url('./images/abu-dhabi.jpg'); }
     .outter-book.right { background-image: url('./images/abu-dhabi.jpg'); }
 
-    /* Set A: p1~p5 (s1~s6) */
-    .pa1 .front                    { background-image: url('./images/abu-dhabi.jpg'); }
-    .pa1 .back,  .pa2 .front       { background-image: url('./images/kazan.jpg'); }
-    .pa2 .back,  .pa3 .front       { background-image: url('./images/lyon.jpg'); }
-    .pa3 .back,  .pa4 .front       { background-image: url('./images/sao-paulo.jpg'); }
-    .pa4 .back,  .pa5 .front       { background-image: url('./images/shanghai.jpg'); }
-    .pa5 .back                     { background-image: url('./images/abu-dhabi.jpg'); }
+    /* Set A (pa): s1~s5 담당 */
+    .pa1 .front                { background-image: url('./images/abu-dhabi.jpg'); }
+    .pa1 .back, .pa2 .front    { background-image: url('./images/kazan.jpg'); }
+    .pa2 .back, .pa3 .front    { background-image: url('./images/lyon.jpg'); }
+    .pa3 .back, .pa4 .front    { background-image: url('./images/sao-paulo.jpg'); }
+    .pa4 .back, .pa5 .front    { background-image: url('./images/shanghai.jpg'); }
+    .pa5 .back                 { background-image: url('./images/abu-dhabi.jpg'); }
 
-    /* Set B: q1~q5 (s6~s11 순환) */
-    .pb1 .front                    { background-image: url('./images/abu-dhabi.jpg'); }
-    .pb1 .back,  .pb2 .front       { background-image: url('./images/kazan.jpg'); }
-    .pb2 .back,  .pb3 .front       { background-image: url('./images/lyon.jpg'); }
-    .pb3 .back,  .pb4 .front       { background-image: url('./images/sao-paulo.jpg'); }
-    .pb4 .back,  .pb5 .front       { background-image: url('./images/shanghai.jpg'); }
-    .pb5 .back                     { background-image: url('./images/abu-dhabi.jpg'); }
+    /* Set B (pb): s6~s10 담당 */
+    .pb1 .front                { background-image: url('./images/abu-dhabi.jpg'); }
+    .pb1 .back, .pb2 .front    { background-image: url('./images/kazan.jpg'); }
+    .pb2 .back, .pb3 .front    { background-image: url('./images/lyon.jpg'); }
+    .pb3 .back, .pb4 .front    { background-image: url('./images/sao-paulo.jpg'); }
+    .pb4 .back, .pb5 .front    { background-image: url('./images/shanghai.jpg'); }
+    .pb5 .back                 { background-image: url('./images/abu-dhabi.jpg'); }
 
     /*
-      ══════════════════════════════════════════════════════
-      순환 전용 더미 페이지 (dummy)
-      
-      [다음 방향 순환] 5→1:
-        - s5에서 next 클릭 → sf(fake) 상태 진입
-        - dummy-fwd 페이지가 5번 이미지를 front에 보여주며 왼쪽으로 접힘
-        - 그 뒤 s6(=1번)으로 즉시 전환 (transition:none으로 리셋 불필요, Set B가 대기중)
+    ══════════════════════════════════════════════════════
+    더미 페이지 2장
 
-      [이전 방향 순환] 1→5:
-        - s1에서 prev 클릭 → sb(fake) 상태 진입
-        - dummy-bwd 페이지가 1번 이미지를 front에 보여주며 오른쪽으로 열림
-        - 그 뒤 s5로 즉시 전환
+    [dummy-fwd] 5→1 순환 (다음 방향):
+      s6 진입 시 작동
+      front = shanghai(5번) 오른쪽절반
+      back  = abu-dhabi(1번) 왼쪽절반
+      기본: rotateY(0deg), transition:none, z-index:0
+      s6: z-index:35, transition:var, rotateY(-180deg)
+      → 5번이 왼쪽으로 접히며 사라지고, 뒤에서 Set B의 1번이 등장
 
-      두 케이스 모두 "더미 페이지 1장이 플립" → 같은 느낌
-      ══════════════════════════════════════════════════════
+    [dummy-bwd] 1→5 순환 (이전 방향):
+      sb 진입 시 작동
+      front = shanghai(5번) 오른쪽절반  ← 5번이 오른쪽에서 들어옴
+      back  = (안보임)
+      기본: rotateY(-180deg), transition:none, z-index:0 ← 뒤집혀서 대기
+      sb: z-index:35, transition:var, rotateY(0deg)
+      → -180deg에서 0deg로 = 오른쪽에서 왼쪽으로 펼쳐짐 = 이전 방향 모션
+      → 완료 시 front(5번)가 보이는 상태 → s5로 연결
+    ══════════════════════════════════════════════════════
     */
 
-    /* 더미 페이지: 다음 방향 (5→1) */
-    /* front=5번(shanghai), back=1번(abu-dhabi) */
     .dummy-fwd .front { background-image: url('./images/shanghai.jpg'); }
     .dummy-fwd .back  { background-image: url('./images/abu-dhabi.jpg'); }
 
-    /* 더미 페이지: 이전 방향 (1→5) */
-    /* transform-origin: right, front=1번(abu-dhabi), back=5번(shanghai) */
-    .dummy-bwd {
-      transform-origin: right center !important;
-    }
-    .dummy-bwd .front { background-image: url('./images/abu-dhabi.jpg'); background-position: left !important; }
-    .dummy-bwd .back  {
-      background-image: url('./images/shanghai.jpg');
-      transform: rotateY(-180deg) !important;
-      border-radius: 0 5px 5px 0 !important;
-      background-position: right !important;
-    }
+    /* dummy-bwd: front=5번, 기본은 뒤집혀(-180deg) 있음 */
+    .dummy-bwd .front { background-image: url('./images/shanghai.jpg'); }
+    .dummy-bwd .back  { background-image: url('./images/abu-dhabi.jpg'); }
 
-    /* ════════════════════════════════════
-       기본 z-index / 상태
-    ════════════════════════════════════ */
+    /* ══════════════════════════════════════
+       기본 상태
+    ══════════════════════════════════════ */
 
-    /* Set A: 앞에, transition 있음 */
-    .pa1 { z-index: 25; transition: transform var(--anim); }
-    .pa2 { z-index: 24; transition: transform var(--anim); }
-    .pa3 { z-index: 23; transition: transform var(--anim); }
-    .pa4 { z-index: 22; transition: transform var(--anim); }
-    .pa5 { z-index: 21; transition: transform var(--anim); }
+    /* Set A: 앞에, 0deg, transition 있음 */
+    .pa1 { z-index: 25; transform: rotateY(0deg); transition: transform var(--anim); }
+    .pa2 { z-index: 24; transform: rotateY(0deg); transition: transform var(--anim); }
+    .pa3 { z-index: 23; transform: rotateY(0deg); transition: transform var(--anim); }
+    .pa4 { z-index: 22; transform: rotateY(0deg); transition: transform var(--anim); }
+    .pa5 { z-index: 21; transform: rotateY(0deg); transition: transform var(--anim); }
 
-    /* Set B: 뒤에 0deg 대기, transition:none */
-    .pb1 { z-index: 5; transition: none; transform: rotateY(0deg); }
-    .pb2 { z-index: 4; transition: none; transform: rotateY(0deg); }
-    .pb3 { z-index: 3; transition: none; transform: rotateY(0deg); }
-    .pb4 { z-index: 2; transition: none; transform: rotateY(0deg); }
-    .pb5 { z-index: 1; transition: none; transform: rotateY(0deg); }
+    /* Set B: 뒤에서 0deg 대기, transition:none */
+    .pb1 { z-index: 0; transform: rotateY(0deg); transition: none; }
+    .pb2 { z-index: 0; transform: rotateY(0deg); transition: none; }
+    .pb3 { z-index: 0; transform: rotateY(0deg); transition: none; }
+    .pb4 { z-index: 0; transform: rotateY(0deg); transition: none; }
+    .pb5 { z-index: 0; transform: rotateY(0deg); transition: none; }
 
-    /* 더미 페이지들: 기본 숨김 (z-index:0) */
-    .dummy-fwd { z-index: 0; transition: transform var(--anim); transform: rotateY(0deg); }
-    .dummy-bwd { z-index: 0; transition: transform var(--anim); transform: rotateY(0deg); }
+    /* dummy-fwd: 0deg 대기, transition:none, 숨김 */
+    .dummy-fwd { z-index: 0; transform: rotateY(0deg); transition: none; }
 
-    /* ════════════════════════════════════
-       NEXT 방향: s1~s11
-    ════════════════════════════════════ */
+    /* dummy-bwd: -180deg 대기 (뒤집혀 있음), transition:none, 숨김 */
+    .dummy-bwd { z-index: 0; transform: rotateY(-180deg); transition: none; }
 
-    /* s1: 초기 (pa1~pa5 모두 0deg, 기본값) */
+    /* ══════════════════════════════════════
+       NEXT 방향: s1~s10
+    ══════════════════════════════════════ */
 
-    #s2:checked ~ .scene .pa1 { transform: rotateY(-180deg); z-index: 30; }
+    /* s1: 초기 상태, pa 모두 0deg (기본값) */
+
+    #s2:checked ~ .scene .pa1
+      { transform: rotateY(-180deg); z-index: 30; }
 
     #s3:checked ~ .scene .pa1,
-    #s3:checked ~ .scene .pa2 { transform: rotateY(-180deg); z-index: 30; }
+    #s3:checked ~ .scene .pa2
+      { transform: rotateY(-180deg); z-index: 30; }
 
     #s4:checked ~ .scene .pa1,
     #s4:checked ~ .scene .pa2,
-    #s4:checked ~ .scene .pa3 { transform: rotateY(-180deg); z-index: 30; }
+    #s4:checked ~ .scene .pa3
+      { transform: rotateY(-180deg); z-index: 30; }
 
     #s5:checked ~ .scene .pa1,
     #s5:checked ~ .scene .pa2,
     #s5:checked ~ .scene .pa3,
-    #s5:checked ~ .scene .pa4 { transform: rotateY(-180deg); z-index: 30; }
+    #s5:checked ~ .scene .pa4
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* ── 5→1 순환: sf 상태 (더미 페이지가 5→1 플립) ── */
-    /* sf: pa1~pa4는 이미 접힌 상태 유지, dummy-fwd가 접히는 애니메이션 */
-    #sf:checked ~ .scene .pa1,
-    #sf:checked ~ .scene .pa2,
-    #sf:checked ~ .scene .pa3,
-    #sf:checked ~ .scene .pa4 { transform: rotateY(-180deg); z-index: 30; }
+    /* ─────────────────────────────────────
+       s6 진입: 5→1 순환
+       1. pa 전체 즉시 숨김 (transition:none)
+       2. dummy-fwd가 앞에서 -180deg 애니메이션 (5번→1번)
+       3. pb1~pb5가 앞으로 나와 1번 상태로 대기
+    ───────────────────────────────────── */
 
-    /* pa5는 dummy-fwd 뒤에 숨겨둠 (dummy가 pa5처럼 보임) */
-    #sf:checked ~ .scene .pa5 { z-index: 0 !important; transition: none !important; }
-
-    /* dummy-fwd 앞으로 나와서 접힘 애니메이션 */
-    #sf:checked ~ .scene .dummy-fwd {
-      z-index: 35;
-      transform: rotateY(-180deg);
-    }
-
-    /* sf 이후 Set B의 pb1~pb5도 0deg로 대기 상태 유지 (보이진 않음) */
-
-    /* ── s6~s11: Set A 전체 숨김, Set B 앞으로 ── */
+    /* pa: s6 이후 transition:none, -180deg, z-index:0 */
     #s6:checked  ~ .scene .pa1, #s6:checked  ~ .scene .pa2,
     #s6:checked  ~ .scene .pa3, #s6:checked  ~ .scene .pa4,
     #s6:checked  ~ .scene .pa5,
@@ -226,16 +208,30 @@
     #s9:checked  ~ .scene .pa5,
     #s10:checked ~ .scene .pa1, #s10:checked ~ .scene .pa2,
     #s10:checked ~ .scene .pa3, #s10:checked ~ .scene .pa4,
-    #s10:checked ~ .scene .pa5,
-    #s11:checked ~ .scene .pa1, #s11:checked ~ .scene .pa2,
-    #s11:checked ~ .scene .pa3, #s11:checked ~ .scene .pa4,
-    #s11:checked ~ .scene .pa5 {
+    #s10:checked ~ .scene .pa5 {
       transform: rotateY(-180deg);
       transition: none;
       z-index: 0;
     }
 
-    /* s6~s11: Set B transition 복구 + 앞으로 */
+    /* dummy-fwd: s6에서만 애니메이션 */
+    #s6:checked ~ .scene .dummy-fwd {
+      z-index: 35;
+      transform: rotateY(-180deg);
+      transition: transform var(--anim);
+    }
+
+    /* dummy-fwd: s7~s10에서 -180deg 고정 숨김 */
+    #s7:checked  ~ .scene .dummy-fwd,
+    #s8:checked  ~ .scene .dummy-fwd,
+    #s9:checked  ~ .scene .dummy-fwd,
+    #s10:checked ~ .scene .dummy-fwd {
+      z-index: 0;
+      transform: rotateY(-180deg);
+      transition: none;
+    }
+
+    /* pb: s6~s10 앞으로 + transition 복구 */
     #s6:checked  ~ .scene .pb1, #s6:checked  ~ .scene .pb2,
     #s6:checked  ~ .scene .pb3, #s6:checked  ~ .scene .pb4,
     #s6:checked  ~ .scene .pb5,
@@ -250,244 +246,320 @@
     #s9:checked  ~ .scene .pb5,
     #s10:checked ~ .scene .pb1, #s10:checked ~ .scene .pb2,
     #s10:checked ~ .scene .pb3, #s10:checked ~ .scene .pb4,
-    #s10:checked ~ .scene .pb5,
-    #s11:checked ~ .scene .pb1, #s11:checked ~ .scene .pb2,
-    #s11:checked ~ .scene .pb3, #s11:checked ~ .scene .pb4,
-    #s11:checked ~ .scene .pb5 { transition: transform var(--anim); }
+    #s10:checked ~ .scene .pb5 {
+      transition: transform var(--anim);
+    }
 
-    #s6:checked  ~ .scene .pb1, #s7:checked  ~ .scene .pb1,
-    #s8:checked  ~ .scene .pb1, #s9:checked  ~ .scene .pb1,
-    #s10:checked ~ .scene .pb1, #s11:checked ~ .scene .pb1 { z-index: 25; }
-    #s6:checked  ~ .scene .pb2, #s7:checked  ~ .scene .pb2,
-    #s8:checked  ~ .scene .pb2, #s9:checked  ~ .scene .pb2,
-    #s10:checked ~ .scene .pb2, #s11:checked ~ .scene .pb2 { z-index: 24; }
-    #s6:checked  ~ .scene .pb3, #s7:checked  ~ .scene .pb3,
-    #s8:checked  ~ .scene .pb3, #s9:checked  ~ .scene .pb3,
-    #s10:checked ~ .scene .pb3, #s11:checked ~ .scene .pb3 { z-index: 23; }
-    #s6:checked  ~ .scene .pb4, #s7:checked  ~ .scene .pb4,
-    #s8:checked  ~ .scene .pb4, #s9:checked  ~ .scene .pb4,
-    #s10:checked ~ .scene .pb4, #s11:checked ~ .scene .pb4 { z-index: 22; }
-    #s6:checked  ~ .scene .pb5, #s7:checked  ~ .scene .pb5,
-    #s8:checked  ~ .scene .pb5, #s9:checked  ~ .scene .pb5,
-    #s10:checked ~ .scene .pb5, #s11:checked ~ .scene .pb5 { z-index: 21; }
+    #s6:checked  ~ .scene .pb1,#s7:checked  ~ .scene .pb1,
+    #s8:checked  ~ .scene .pb1,#s9:checked  ~ .scene .pb1,
+    #s10:checked ~ .scene .pb1 { z-index: 25; }
+    #s6:checked  ~ .scene .pb2,#s7:checked  ~ .scene .pb2,
+    #s8:checked  ~ .scene .pb2,#s9:checked  ~ .scene .pb2,
+    #s10:checked ~ .scene .pb2 { z-index: 24; }
+    #s6:checked  ~ .scene .pb3,#s7:checked  ~ .scene .pb3,
+    #s8:checked  ~ .scene .pb3,#s9:checked  ~ .scene .pb3,
+    #s10:checked ~ .scene .pb3 { z-index: 23; }
+    #s6:checked  ~ .scene .pb4,#s7:checked  ~ .scene .pb4,
+    #s8:checked  ~ .scene .pb4,#s9:checked  ~ .scene .pb4,
+    #s10:checked ~ .scene .pb4 { z-index: 22; }
+    #s6:checked  ~ .scene .pb5,#s7:checked  ~ .scene .pb5,
+    #s8:checked  ~ .scene .pb5,#s9:checked  ~ .scene .pb5,
+    #s10:checked ~ .scene .pb5 { z-index: 21; }
 
-    /* Set B 플립 */
-    #s7:checked  ~ .scene .pb1 { transform: rotateY(-180deg); z-index: 30; }
+    /* pb 플립: s6=모두0deg, s7=pb1접힘, ..., s10=pb1~pb4접힘 */
+    #s7:checked  ~ .scene .pb1
+      { transform: rotateY(-180deg); z-index: 30; }
     #s8:checked  ~ .scene .pb1,
-    #s8:checked  ~ .scene .pb2 { transform: rotateY(-180deg); z-index: 30; }
+    #s8:checked  ~ .scene .pb2
+      { transform: rotateY(-180deg); z-index: 30; }
     #s9:checked  ~ .scene .pb1,
     #s9:checked  ~ .scene .pb2,
-    #s9:checked  ~ .scene .pb3 { transform: rotateY(-180deg); z-index: 30; }
+    #s9:checked  ~ .scene .pb3
+      { transform: rotateY(-180deg); z-index: 30; }
     #s10:checked ~ .scene .pb1,
     #s10:checked ~ .scene .pb2,
     #s10:checked ~ .scene .pb3,
-    #s10:checked ~ .scene .pb4 { transform: rotateY(-180deg); z-index: 30; }
-    #s11:checked ~ .scene .pb1,
-    #s11:checked ~ .scene .pb2,
-    #s11:checked ~ .scene .pb3,
-    #s11:checked ~ .scene .pb4,
-    #s11:checked ~ .scene .pb5 { transform: rotateY(-180deg); z-index: 30; }
+    #s10:checked ~ .scene .pb4
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* ════════════════════════════════════
-       PREV 방향: r1~r11
-       이전 버튼은 Set A를 역방향으로 복구하는 방식
-       (transition 없이 즉시 점프 후 복구 애니메이션)
-
-       핵심: r 상태 = 해당 이미지의 "다음 pa가 접혀있는" 상태
-       r2 = s2와 같은 화면 (pa1 접힘), r1 = s1과 같은 화면
-
-       이전 버튼: sN → r(N)으로 전환
-       r(N) 진입 시: paN이 즉시 0deg로 복구 (transition:none)
-       → 사용자 눈에는 paN이 오른쪽→왼쪽으로 열리는 것처럼 보여야 함
-
-       [올바른 prev 구현]:
-       r상태에서는 pa들이 transition있게 복구됨
-       rN: pa(1..N)가 -180deg
-       r(N-1): pa(1..N-1)가 -180deg (paN이 0deg로 돌아옴 = prev 모션)
-
-       실제로: sN에서 prev 클릭 → rN으로 진입
-       rN = paN이 접혀있는 상태 + transition있음
-       rN→r(N-1) = pa(N)이 0deg로 돌아옴 = 왼→오 모션
-
-       하지만 여기선 sN→rN 진입 자체가 "순간이동"이어야 함
-       sN에서 pa(1..N)가 이미 접혀있으므로 rN도 같은 상태 → OK
-
-       rN에서 이전 클릭 → r(N-1)
-       paN이 transition있게 0deg로 돌아옴 → 역방향 플립 ✓
-    ════════════════════════════════════ */
-
-    /* r 시리즈에서 Set A transition 복구 */
-    #r1:checked  ~ .scene .pa1, #r1:checked  ~ .scene .pa2,
-    #r1:checked  ~ .scene .pa3, #r1:checked  ~ .scene .pa4,
-    #r1:checked  ~ .scene .pa5,
-    #r2:checked  ~ .scene .pa1, #r2:checked  ~ .scene .pa2,
-    #r2:checked  ~ .scene .pa3, #r2:checked  ~ .scene .pa4,
-    #r2:checked  ~ .scene .pa5,
-    #r3:checked  ~ .scene .pa1, #r3:checked  ~ .scene .pa2,
-    #r3:checked  ~ .scene .pa3, #r3:checked  ~ .scene .pa4,
-    #r3:checked  ~ .scene .pa5,
-    #r4:checked  ~ .scene .pa1, #r4:checked  ~ .scene .pa2,
-    #r4:checked  ~ .scene .pa3, #r4:checked  ~ .scene .pa4,
-    #r4:checked  ~ .scene .pa5,
-    #r5:checked  ~ .scene .pa1, #r5:checked  ~ .scene .pa2,
-    #r5:checked  ~ .scene .pa3, #r5:checked  ~ .scene .pa4,
-    #r5:checked  ~ .scene .pa5 { transition: transform var(--anim); z-index: auto; }
-
-    /* r1: 모두 0deg (s1과 동일) */
-    /* r2: pa1 접힘 (s2와 동일) */
-    #r2:checked ~ .scene .pa1 { transform: rotateY(-180deg); z-index: 30; }
-    /* r3: pa1,pa2 접힘 */
-    #r3:checked ~ .scene .pa1,
-    #r3:checked ~ .scene .pa2 { transform: rotateY(-180deg); z-index: 30; }
-    /* r4 */
-    #r4:checked ~ .scene .pa1,
-    #r4:checked ~ .scene .pa2,
-    #r4:checked ~ .scene .pa3 { transform: rotateY(-180deg); z-index: 30; }
-    /* r5 */
-    #r5:checked ~ .scene .pa1,
-    #r5:checked ~ .scene .pa2,
-    #r5:checked ~ .scene .pa3,
-    #r5:checked ~ .scene .pa4 { transform: rotateY(-180deg); z-index: 30; }
-
-    /* ── 1→5 순환: sb 상태 (더미-bwd 페이지가 1→5 플립) ── */
-    /*
-      sb: s1에서 prev 클릭 시 진입
-      1번 화면을 보여주면서 dummy-bwd가 오른쪽에서 열리는 애니메이션
-      dummy-bwd.front=1번, dummy-bwd.back=5번
-      transform-origin:right, rotateY(0→180deg)
-      → 0deg=1번 보임, 180deg=5번 보임
-      sb 상태: dummy-bwd가 180deg (5번이 왼쪽에 펼쳐짐)
-      sb 진입 전: dummy-bwd = 0deg (순간 세팅)
-      → sb 체크 시 즉시 180deg로 전환 = 애니메이션 발생
-    */
-
-    /* sb 상태: dummy-bwd 앞으로 + 180deg */
-    #sb:checked ~ .scene .dummy-bwd {
-      z-index: 35;
-      transform: rotateY(180deg);
+    /* ─────────────────────────────────────
+       s1 재진입 (s10→s1 순환):
+       1. pb 전체 즉시 숨김
+       2. dummy-fwd 즉시 0deg 리셋 (핵심!)
+       3. pa 기본값(0deg)으로 자동 복구
+    ───────────────────────────────────── */
+    #s1:checked ~ .scene .pb1,
+    #s1:checked ~ .scene .pb2,
+    #s1:checked ~ .scene .pb3,
+    #s1:checked ~ .scene .pb4,
+    #s1:checked ~ .scene .pb5 {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
     }
 
-    /* sb 상태: Set A pa1~pa5는 모두 뒤로 (dummy-bwd가 1번 커버) */
+    /* s1 재진입 시 dummy-fwd를 0deg로 즉시 리셋 */
+    #s1:checked ~ .scene .dummy-fwd {
+      transform: rotateY(0deg);
+      transition: none;
+      z-index: 0;
+    }
+
+    /* s2~s5에서도 pb, dummy 숨김 */
+    #s2:checked ~ .scene .pb1,#s2:checked ~ .scene .pb2,
+    #s2:checked ~ .scene .pb3,#s2:checked ~ .scene .pb4,
+    #s2:checked ~ .scene .pb5,
+    #s3:checked ~ .scene .pb1,#s3:checked ~ .scene .pb2,
+    #s3:checked ~ .scene .pb3,#s3:checked ~ .scene .pb4,
+    #s3:checked ~ .scene .pb5,
+    #s4:checked ~ .scene .pb1,#s4:checked ~ .scene .pb2,
+    #s4:checked ~ .scene .pb3,#s4:checked ~ .scene .pb4,
+    #s4:checked ~ .scene .pb5,
+    #s5:checked ~ .scene .pb1,#s5:checked ~ .scene .pb2,
+    #s5:checked ~ .scene .pb3,#s5:checked ~ .scene .pb4,
+    #s5:checked ~ .scene .pb5 {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
+    }
+
+    /* ══════════════════════════════════════
+       PREV 방향: r1~r10 + sb
+
+       [핵심] PREV 애니메이션:
+       r시리즈는 Set A로 "현재 이미지"를 즉시 보여주는 상태
+       rN → r(N-1): paN이 0deg로 돌아오는 역방향 애니메이션
+
+       r1=1번, r2=2번, r3=3번, r4=4번, r5=5번
+       r6=5번(SetB), r7=4번, r8=3번, r9=2번, r10=1번
+
+       sb = 1→5 순환 더미:
+       dummy-bwd가 -180deg(뒤집혀대기) → 0deg(앞으로펼쳐짐)
+       = 5번이 오른쪽에서 왼쪽으로 밀려들어오는 모션
+       완료 후 → s5 (SetA, 5번 상태)
+    ══════════════════════════════════════ */
+
+    /* ─────────────────────────────────────
+       sb: 1→5 순환 더미 애니메이션
+       dummy-bwd가 -180deg → 0deg 펼쳐짐
+       (5번 이미지가 오른쪽에서 들어오는 효과)
+    ───────────────────────────────────── */
+    #sb:checked ~ .scene .dummy-bwd {
+      z-index: 35;
+      transform: rotateY(0deg);
+      transition: transform var(--anim);
+    }
+
+    /* sb 상태: pa 전체 뒤로 (dummy가 앞을 덮음) */
     #sb:checked ~ .scene .pa1,
     #sb:checked ~ .scene .pa2,
     #sb:checked ~ .scene .pa3,
     #sb:checked ~ .scene .pa4,
-    #sb:checked ~ .scene .pa5 { z-index: 0 !important; transition: none !important; }
+    #sb:checked ~ .scene .pa5 {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
+    }
 
-    /* ── r6~r11: Set B를 이용한 역방향 순환 (5→4→3...) ── */
-    #r6:checked  ~ .scene .pb1, #r6:checked  ~ .scene .pb2,
-    #r6:checked  ~ .scene .pb3, #r6:checked  ~ .scene .pb4,
-    #r6:checked  ~ .scene .pb5,
-    #r7:checked  ~ .scene .pb1, #r7:checked  ~ .scene .pb2,
-    #r7:checked  ~ .scene .pb3, #r7:checked  ~ .scene .pb4,
-    #r7:checked  ~ .scene .pb5,
-    #r8:checked  ~ .scene .pb1, #r8:checked  ~ .scene .pb2,
-    #r8:checked  ~ .scene .pb3, #r8:checked  ~ .scene .pb4,
-    #r8:checked  ~ .scene .pb5,
-    #r9:checked  ~ .scene .pb1, #r9:checked  ~ .scene .pb2,
-    #r9:checked  ~ .scene .pb3, #r9:checked  ~ .scene .pb4,
-    #r9:checked  ~ .scene .pb5,
-    #r10:checked ~ .scene .pb1, #r10:checked ~ .scene .pb2,
-    #r10:checked ~ .scene .pb3, #r10:checked ~ .scene .pb4,
-    #r10:checked ~ .scene .pb5,
-    #r11:checked ~ .scene .pb1, #r11:checked ~ .scene .pb2,
-    #r11:checked ~ .scene .pb3, #r11:checked ~ .scene .pb4,
-    #r11:checked ~ .scene .pb5 { transition: transform var(--anim); }
+    /* sb 상태: pb 숨김 */
+    #sb:checked ~ .scene .pb1,
+    #sb:checked ~ .scene .pb2,
+    #sb:checked ~ .scene .pb3,
+    #sb:checked ~ .scene .pb4,
+    #sb:checked ~ .scene .pb5 {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
+    }
 
-    #r6:checked  ~ .scene .pb1, #r7:checked  ~ .scene .pb1,
-    #r8:checked  ~ .scene .pb1, #r9:checked  ~ .scene .pb1,
-    #r10:checked ~ .scene .pb1, #r11:checked ~ .scene .pb1 { z-index: 25; }
-    #r6:checked  ~ .scene .pb2, #r7:checked  ~ .scene .pb2,
-    #r8:checked  ~ .scene .pb2, #r9:checked  ~ .scene .pb2,
-    #r10:checked ~ .scene .pb2, #r11:checked ~ .scene .pb2 { z-index: 24; }
-    #r6:checked  ~ .scene .pb3, #r7:checked  ~ .scene .pb3,
-    #r8:checked  ~ .scene .pb3, #r9:checked  ~ .scene .pb3,
-    #r10:checked ~ .scene .pb3, #r11:checked ~ .scene .pb3 { z-index: 23; }
-    #r6:checked  ~ .scene .pb4, #r7:checked  ~ .scene .pb4,
-    #r8:checked  ~ .scene .pb4, #r9:checked  ~ .scene .pb4,
-    #r10:checked ~ .scene .pb4, #r11:checked ~ .scene .pb4 { z-index: 22; }
-    #r6:checked  ~ .scene .pb5, #r7:checked  ~ .scene .pb5,
-    #r8:checked  ~ .scene .pb5, #r9:checked  ~ .scene .pb5,
-    #r10:checked ~ .scene .pb5, #r11:checked ~ .scene .pb5 { z-index: 21; }
+    /* ─────────────────────────────────────
+       r1~r5: Set A로 PREV 방향 제어
+       핵심: r시리즈 전환은 transition:var로 자연스럽게
+    ───────────────────────────────────── */
 
-    /* r6~r11: Set A 뒤로 */
-    #r6:checked  ~ .scene .pa1, #r6:checked  ~ .scene .pa2,
-    #r6:checked  ~ .scene .pa3, #r6:checked  ~ .scene .pa4,
+    /* r1~r5: pa transition 복구 */
+    #r1:checked ~ .scene .pa1,#r1:checked ~ .scene .pa2,
+    #r1:checked ~ .scene .pa3,#r1:checked ~ .scene .pa4,
+    #r1:checked ~ .scene .pa5,
+    #r2:checked ~ .scene .pa1,#r2:checked ~ .scene .pa2,
+    #r2:checked ~ .scene .pa3,#r2:checked ~ .scene .pa4,
+    #r2:checked ~ .scene .pa5,
+    #r3:checked ~ .scene .pa1,#r3:checked ~ .scene .pa2,
+    #r3:checked ~ .scene .pa3,#r3:checked ~ .scene .pa4,
+    #r3:checked ~ .scene .pa5,
+    #r4:checked ~ .scene .pa1,#r4:checked ~ .scene .pa2,
+    #r4:checked ~ .scene .pa3,#r4:checked ~ .scene .pa4,
+    #r4:checked ~ .scene .pa5,
+    #r5:checked ~ .scene .pa1,#r5:checked ~ .scene .pa2,
+    #r5:checked ~ .scene .pa3,#r5:checked ~ .scene .pa4,
+    #r5:checked ~ .scene .pa5 {
+      transition: transform var(--anim);
+    }
+
+    /* r1~r5: pa z-index */
+    #r1:checked ~ .scene .pa1,#r2:checked ~ .scene .pa1,
+    #r3:checked ~ .scene .pa1,#r4:checked ~ .scene .pa1,
+    #r5:checked ~ .scene .pa1 { z-index: 25; }
+    #r1:checked ~ .scene .pa2,#r2:checked ~ .scene .pa2,
+    #r3:checked ~ .scene .pa2,#r4:checked ~ .scene .pa2,
+    #r5:checked ~ .scene .pa2 { z-index: 24; }
+    #r1:checked ~ .scene .pa3,#r2:checked ~ .scene .pa3,
+    #r3:checked ~ .scene .pa3,#r4:checked ~ .scene .pa3,
+    #r5:checked ~ .scene .pa3 { z-index: 23; }
+    #r1:checked ~ .scene .pa4,#r2:checked ~ .scene .pa4,
+    #r3:checked ~ .scene .pa4,#r4:checked ~ .scene .pa4,
+    #r5:checked ~ .scene .pa4 { z-index: 22; }
+    #r1:checked ~ .scene .pa5,#r2:checked ~ .scene .pa5,
+    #r3:checked ~ .scene .pa5,#r4:checked ~ .scene .pa5,
+    #r5:checked ~ .scene .pa5 { z-index: 21; }
+
+    /* r1=1번: pa 모두 0deg (기본값) */
+    /* r2=2번: pa1 -180deg */
+    #r2:checked ~ .scene .pa1
+      { transform: rotateY(-180deg); z-index: 30; }
+    /* r3=3번: pa1,pa2 -180deg */
+    #r3:checked ~ .scene .pa1,
+    #r3:checked ~ .scene .pa2
+      { transform: rotateY(-180deg); z-index: 30; }
+    /* r4=4번 */
+    #r4:checked ~ .scene .pa1,
+    #r4:checked ~ .scene .pa2,
+    #r4:checked ~ .scene .pa3
+      { transform: rotateY(-180deg); z-index: 30; }
+    /* r5=5번 */
+    #r5:checked ~ .scene .pa1,
+    #r5:checked ~ .scene .pa2,
+    #r5:checked ~ .scene .pa3,
+    #r5:checked ~ .scene .pa4
+      { transform: rotateY(-180deg); z-index: 30; }
+
+    /* r1~r5: pb, dummy 숨김 */
+    #r1:checked ~ .scene .pb1,#r1:checked ~ .scene .pb2,
+    #r1:checked ~ .scene .pb3,#r1:checked ~ .scene .pb4,
+    #r1:checked ~ .scene .pb5,
+    #r2:checked ~ .scene .pb1,#r2:checked ~ .scene .pb2,
+    #r2:checked ~ .scene .pb3,#r2:checked ~ .scene .pb4,
+    #r2:checked ~ .scene .pb5,
+    #r3:checked ~ .scene .pb1,#r3:checked ~ .scene .pb2,
+    #r3:checked ~ .scene .pb3,#r3:checked ~ .scene .pb4,
+    #r3:checked ~ .scene .pb5,
+    #r4:checked ~ .scene .pb1,#r4:checked ~ .scene .pb2,
+    #r4:checked ~ .scene .pb3,#r4:checked ~ .scene .pb4,
+    #r4:checked ~ .scene .pb5,
+    #r5:checked ~ .scene .pb1,#r5:checked ~ .scene .pb2,
+    #r5:checked ~ .scene .pb3,#r5:checked ~ .scene .pb4,
+    #r5:checked ~ .scene .pb5 {
+      transform: rotateY(-180deg); transition: none; z-index: 0;
+    }
+
+    /* r1~r5: dummy-bwd 즉시 리셋 (-180deg로) */
+    #r1:checked ~ .scene .dummy-bwd,
+    #r2:checked ~ .scene .dummy-bwd,
+    #r3:checked ~ .scene .dummy-bwd,
+    #r4:checked ~ .scene .dummy-bwd,
+    #r5:checked ~ .scene .dummy-bwd {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
+    }
+
+    /* ─────────────────────────────────────
+       r6~r10: Set B로 PREV 방향 제어
+       r6=5번(SetB), r7=4번, r8=3번, r9=2번, r10=1번
+    ───────────────────────────────────── */
+
+    /* r6~r10: pa 숨김 */
+    #r6:checked  ~ .scene .pa1,#r6:checked  ~ .scene .pa2,
+    #r6:checked  ~ .scene .pa3,#r6:checked  ~ .scene .pa4,
     #r6:checked  ~ .scene .pa5,
-    #r7:checked  ~ .scene .pa1, #r7:checked  ~ .scene .pa2,
-    #r7:checked  ~ .scene .pa3, #r7:checked  ~ .scene .pa4,
+    #r7:checked  ~ .scene .pa1,#r7:checked  ~ .scene .pa2,
+    #r7:checked  ~ .scene .pa3,#r7:checked  ~ .scene .pa4,
     #r7:checked  ~ .scene .pa5,
-    #r8:checked  ~ .scene .pa1, #r8:checked  ~ .scene .pa2,
-    #r8:checked  ~ .scene .pa3, #r8:checked  ~ .scene .pa4,
+    #r8:checked  ~ .scene .pa1,#r8:checked  ~ .scene .pa2,
+    #r8:checked  ~ .scene .pa3,#r8:checked  ~ .scene .pa4,
     #r8:checked  ~ .scene .pa5,
-    #r9:checked  ~ .scene .pa1, #r9:checked  ~ .scene .pa2,
-    #r9:checked  ~ .scene .pa3, #r9:checked  ~ .scene .pa4,
+    #r9:checked  ~ .scene .pa1,#r9:checked  ~ .scene .pa2,
+    #r9:checked  ~ .scene .pa3,#r9:checked  ~ .scene .pa4,
     #r9:checked  ~ .scene .pa5,
-    #r10:checked ~ .scene .pa1, #r10:checked ~ .scene .pa2,
-    #r10:checked ~ .scene .pa3, #r10:checked ~ .scene .pa4,
-    #r10:checked ~ .scene .pa5,
-    #r11:checked ~ .scene .pa1, #r11:checked ~ .scene .pa2,
-    #r11:checked ~ .scene .pa3, #r11:checked ~ .scene .pa4,
-    #r11:checked ~ .scene .pa5 { transform: rotateY(-180deg); transition: none; z-index: 0; }
+    #r10:checked ~ .scene .pa1,#r10:checked ~ .scene .pa2,
+    #r10:checked ~ .scene .pa3,#r10:checked ~ .scene .pa4,
+    #r10:checked ~ .scene .pa5 {
+      transform: rotateY(-180deg); transition: none; z-index: 0;
+    }
 
-    /* r6(=5번): pb1~pb4 접힘, pb5만 0deg */
+    /* r6~r10: pb transition 복구 + z-index */
+    #r6:checked  ~ .scene .pb1,#r6:checked  ~ .scene .pb2,
+    #r6:checked  ~ .scene .pb3,#r6:checked  ~ .scene .pb4,
+    #r6:checked  ~ .scene .pb5,
+    #r7:checked  ~ .scene .pb1,#r7:checked  ~ .scene .pb2,
+    #r7:checked  ~ .scene .pb3,#r7:checked  ~ .scene .pb4,
+    #r7:checked  ~ .scene .pb5,
+    #r8:checked  ~ .scene .pb1,#r8:checked  ~ .scene .pb2,
+    #r8:checked  ~ .scene .pb3,#r8:checked  ~ .scene .pb4,
+    #r8:checked  ~ .scene .pb5,
+    #r9:checked  ~ .scene .pb1,#r9:checked  ~ .scene .pb2,
+    #r9:checked  ~ .scene .pb3,#r9:checked  ~ .scene .pb4,
+    #r9:checked  ~ .scene .pb5,
+    #r10:checked ~ .scene .pb1,#r10:checked ~ .scene .pb2,
+    #r10:checked ~ .scene .pb3,#r10:checked ~ .scene .pb4,
+    #r10:checked ~ .scene .pb5 {
+      transition: transform var(--anim);
+    }
+
+    #r6:checked  ~ .scene .pb1,#r7:checked  ~ .scene .pb1,
+    #r8:checked  ~ .scene .pb1,#r9:checked  ~ .scene .pb1,
+    #r10:checked ~ .scene .pb1 { z-index: 25; }
+    #r6:checked  ~ .scene .pb2,#r7:checked  ~ .scene .pb2,
+    #r8:checked  ~ .scene .pb2,#r9:checked  ~ .scene .pb2,
+    #r10:checked ~ .scene .pb2 { z-index: 24; }
+    #r6:checked  ~ .scene .pb3,#r7:checked  ~ .scene .pb3,
+    #r8:checked  ~ .scene .pb3,#r9:checked  ~ .scene .pb3,
+    #r10:checked ~ .scene .pb3 { z-index: 23; }
+    #r6:checked  ~ .scene .pb4,#r7:checked  ~ .scene .pb4,
+    #r8:checked  ~ .scene .pb4,#r9:checked  ~ .scene .pb4,
+    #r10:checked ~ .scene .pb4 { z-index: 22; }
+    #r6:checked  ~ .scene .pb5,#r7:checked  ~ .scene .pb5,
+    #r8:checked  ~ .scene .pb5,#r9:checked  ~ .scene .pb5,
+    #r10:checked ~ .scene .pb5 { z-index: 21; }
+
+    /* r6=5번: pb1~pb4 접힘, pb5=0deg */
     #r6:checked ~ .scene .pb1,
     #r6:checked ~ .scene .pb2,
     #r6:checked ~ .scene .pb3,
-    #r6:checked ~ .scene .pb4 { transform: rotateY(-180deg); z-index: 30; }
+    #r6:checked ~ .scene .pb4
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* r7(=4번): pb1~pb3 접힘 */
+    /* r7=4번: pb1~pb3 접힘 */
     #r7:checked ~ .scene .pb1,
     #r7:checked ~ .scene .pb2,
-    #r7:checked ~ .scene .pb3 { transform: rotateY(-180deg); z-index: 30; }
+    #r7:checked ~ .scene .pb3
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* r8(=3번): pb1~pb2 접힘 */
+    /* r8=3번 */
     #r8:checked ~ .scene .pb1,
-    #r8:checked ~ .scene .pb2 { transform: rotateY(-180deg); z-index: 30; }
+    #r8:checked ~ .scene .pb2
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* r9(=2번): pb1 접힘 */
-    #r9:checked ~ .scene .pb1 { transform: rotateY(-180deg); z-index: 30; }
+    /* r9=2번 */
+    #r9:checked ~ .scene .pb1
+      { transform: rotateY(-180deg); z-index: 30; }
 
-    /* r10(=1번): pb 모두 0deg (기본) */
-    /* r11(=1번 순환): pb 모두 0deg */
+    /* r10=1번: pb 모두 0deg (기본값) */
 
-    /* ════════════════════════════════════
-       dummy 페이지 항상 숨김 (active 아닐 때)
-    ════════════════════════════════════ */
-    .dummy-fwd { transform: rotateY(0deg); }
-    .dummy-bwd { transform: rotateY(0deg); }
-
-    /* sf/sb 아닌 모든 상태에서 dummy 숨김 */
-    #s1:checked  ~ .scene .dummy-fwd, #s1:checked  ~ .scene .dummy-bwd,
-    #s2:checked  ~ .scene .dummy-fwd, #s2:checked  ~ .scene .dummy-bwd,
-    #s3:checked  ~ .scene .dummy-fwd, #s3:checked  ~ .scene .dummy-bwd,
-    #s4:checked  ~ .scene .dummy-fwd, #s4:checked  ~ .scene .dummy-bwd,
-    #s5:checked  ~ .scene .dummy-fwd, #s5:checked  ~ .scene .dummy-bwd,
-    #s6:checked  ~ .scene .dummy-fwd, #s6:checked  ~ .scene .dummy-bwd,
-    #s7:checked  ~ .scene .dummy-fwd, #s7:checked  ~ .scene .dummy-bwd,
-    #s8:checked  ~ .scene .dummy-fwd, #s8:checked  ~ .scene .dummy-bwd,
-    #s9:checked  ~ .scene .dummy-fwd, #s9:checked  ~ .scene .dummy-bwd,
-    #s10:checked ~ .scene .dummy-fwd, #s10:checked ~ .scene .dummy-bwd,
-    #s11:checked ~ .scene .dummy-fwd, #s11:checked ~ .scene .dummy-bwd,
-    #r1:checked  ~ .scene .dummy-fwd, #r1:checked  ~ .scene .dummy-bwd,
-    #r2:checked  ~ .scene .dummy-fwd, #r2:checked  ~ .scene .dummy-bwd,
-    #r3:checked  ~ .scene .dummy-fwd, #r3:checked  ~ .scene .dummy-bwd,
-    #r4:checked  ~ .scene .dummy-fwd, #r4:checked  ~ .scene .dummy-bwd,
-    #r5:checked  ~ .scene .dummy-fwd, #r5:checked  ~ .scene .dummy-bwd,
-    #r6:checked  ~ .scene .dummy-fwd, #r6:checked  ~ .scene .dummy-bwd,
-    #r7:checked  ~ .scene .dummy-fwd, #r7:checked  ~ .scene .dummy-bwd,
-    #r8:checked  ~ .scene .dummy-fwd, #r8:checked  ~ .scene .dummy-bwd,
-    #r9:checked  ~ .scene .dummy-fwd, #r9:checked  ~ .scene .dummy-bwd,
-    #r10:checked ~ .scene .dummy-fwd, #r10:checked ~ .scene .dummy-bwd,
-    #r11:checked ~ .scene .dummy-fwd, #r11:checked ~ .scene .dummy-bwd {
-      z-index: 0 !important;
-      transition: none !important;
-      transform: rotateY(0deg) !important;
+    /* r6~r10: dummy-bwd 즉시 리셋 */
+    #r6:checked  ~ .scene .dummy-bwd,
+    #r7:checked  ~ .scene .dummy-bwd,
+    #r8:checked  ~ .scene .dummy-bwd,
+    #r9:checked  ~ .scene .dummy-bwd,
+    #r10:checked ~ .scene .dummy-bwd {
+      transform: rotateY(-180deg);
+      transition: none;
+      z-index: 0;
     }
 
-    /* ════════════════════════════════════
+    /* ══════════════════════════════════════
        버튼
-    ════════════════════════════════════ */
+    ══════════════════════════════════════ */
     .controls {
       position: absolute;
       bottom: 10%;
@@ -508,7 +580,6 @@
     }
     .btn:hover { background: #000000; transform: scale(1.05); }
 
-    /* s 시리즈 버튼 */
     #s1:checked  ~ .scene .controls .cs1  { display: block; }
     #s2:checked  ~ .scene .controls .cs2  { display: block; }
     #s3:checked  ~ .scene .controls .cs3  { display: block; }
@@ -519,11 +590,7 @@
     #s8:checked  ~ .scene .controls .cs8  { display: block; }
     #s9:checked  ~ .scene .controls .cs9  { display: block; }
     #s10:checked ~ .scene .controls .cs10 { display: block; }
-    #s11:checked ~ .scene .controls .cs11 { display: block; }
-    /* sf/sb */
-    #sf:checked  ~ .scene .controls .csf  { display: block; }
     #sb:checked  ~ .scene .controls .csb  { display: block; }
-    /* r 시리즈 */
     #r1:checked  ~ .scene .controls .cr1  { display: block; }
     #r2:checked  ~ .scene .controls .cr2  { display: block; }
     #r3:checked  ~ .scene .controls .cr3  { display: block; }
@@ -534,7 +601,6 @@
     #r8:checked  ~ .scene .controls .cr8  { display: block; }
     #r9:checked  ~ .scene .controls .cr9  { display: block; }
     #r10:checked ~ .scene .controls .cr10 { display: block; }
-    #r11:checked ~ .scene .controls .cr11 { display: block; }
 
     .yel-background {
       position: absolute;
@@ -546,41 +612,57 @@
   </style>
 </head>
 <body>
-  <!--
-    상태표:
-    s1 = 1번(abu-dhabi)  prev→sb  next→s2
-    s2 = 2번(kazan)      prev→r2  next→s3
-    s3 = 3번(lyon)       prev→r3  next→s4
-    s4 = 4번(sao-paulo)  prev→r4  next→s5
-    s5 = 5번(shanghai)   prev→r5  next→sf
-    sf = 5→1 더미플립    prev→-   next→s6  (애니완료후자동or버튼)
-    s6 = 1번순환(SetB)   prev→r6  next→s7
-    ...s7~s11 동일...
-    sb = 1→5 더미플립    prev→-   next→r6  (애니완료후)
-    r1  = 1번(Set A 복구된)  prev→sb  next→s2
-    r2  = 5번            prev→r3  next→s1
-    r3  = 4번            prev→r4  next→r2→(s5?)
-    ...
-    r6  = 5번(SetB)      prev→r7  next→s6
-    ...
-  -->
 
-  <!-- NEXT 방향 -->
+<!--
+  ═══════════════════════════════════════════════
+  완전한 상태 → 버튼 연결표
+
+  NEXT 방향 (Set A):
+  s1(1번) prev→sb       next→s2
+  s2(2번) prev→r2       next→s3
+  s3(3번) prev→r3       next→s4
+  s4(4번) prev→r4       next→s5
+  s5(5번) prev→r5       next→s6  ← s6에서 dummy-fwd 자동 애니
+
+  NEXT 방향 (Set B):
+  s6(1번) prev→sb       next→s7
+  s7(2번) prev→r7       next→s8
+  s8(3번) prev→r8       next→s9
+  s9(4번) prev→r9       next→s10
+  s10(5번)prev→r6       next→s1  ← s1에서 dummy-fwd 리셋 + pa 복구
+
+  PREV 더미:
+  sb(더미)prev→r5       next→s5  ← 애니완료 후 5번(SetA)
+
+  PREV 방향 (Set A):
+  r1(1번) prev→sb       next→s2
+  r2(2번) prev→r1       next→s3
+  r3(3번) prev→r2       next→s4
+  r4(4번) prev→r3       next→s5
+  r5(5번) prev→r4       next→s6
+
+  PREV 방향 (Set B):
+  r6(5번) prev→r7       next→s10
+  r7(4번) prev→r8       next→s9
+  r8(3번) prev→r9       next→s8
+  r9(2번) prev→r10      next→s7
+  r10(1번)prev→sb       next→s6
+  ═══════════════════════════════════════════════
+-->
+
   <input type="radio" name="flip" id="s1" checked>
   <input type="radio" name="flip" id="s2">
   <input type="radio" name="flip" id="s3">
   <input type="radio" name="flip" id="s4">
   <input type="radio" name="flip" id="s5">
-  <input type="radio" name="flip" id="sf"> <!-- 5→1 더미 애니메이션 -->
   <input type="radio" name="flip" id="s6">
   <input type="radio" name="flip" id="s7">
   <input type="radio" name="flip" id="s8">
   <input type="radio" name="flip" id="s9">
   <input type="radio" name="flip" id="s10">
-  <input type="radio" name="flip" id="s11">
 
-  <!-- PREV 방향 -->
-  <input type="radio" name="flip" id="sb"> <!-- 1→5 더미 애니메이션 -->
+  <input type="radio" name="flip" id="sb">
+
   <input type="radio" name="flip" id="r1">
   <input type="radio" name="flip" id="r2">
   <input type="radio" name="flip" id="r3">
@@ -591,34 +673,30 @@
   <input type="radio" name="flip" id="r8">
   <input type="radio" name="flip" id="r9">
   <input type="radio" name="flip" id="r10">
-  <input type="radio" name="flip" id="r11">
 
   <div class="scene">
     <div class="outter-book left"></div>
 
     <div class="book-container">
-
-      <!-- NEXT Set A -->
       <div class="page pa1"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pa2"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pa3"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pa4"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pa5"><div class="page-face front"></div><div class="page-face back"></div></div>
 
-      <!-- NEXT Set B -->
       <div class="page pb1"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pb2"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pb3"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pb4"><div class="page-face front"></div><div class="page-face back"></div></div>
       <div class="page pb5"><div class="page-face front"></div><div class="page-face back"></div></div>
 
-      <!-- 더미: 5→1 (다음 방향 순환) -->
+      <!-- 5→1 순환 더미 (왼쪽으로 접힘: 5번 사라지고 1번 등장) -->
       <div class="page dummy-fwd">
         <div class="page-face front"></div>
         <div class="page-face back"></div>
       </div>
 
-      <!-- 더미: 1→5 (이전 방향 순환) -->
+      <!-- 1→5 순환 더미 (-180deg→0deg 펼쳐짐: 5번이 오른쪽에서 들어옴) -->
       <div class="page dummy-bwd">
         <div class="page-face front"></div>
         <div class="page-face back"></div>
@@ -628,65 +706,50 @@
     </div>
 
     <div class="controls">
-      <!--
-        버튼 연결표:
-        s1(1번):  prev→sb(1→5더미)   next→s2
-        s2(2번):  prev→r2(5번보임)   next→s3
-        s3(3번):  prev→r3(4번)       next→s4
-        s4(4번):  prev→r4(3번)       next→s5
-        s5(5번):  prev→r5(4번)       next→sf(5→1더미)
-        sf(더미): prev→s5            next→s6(1번SetB)
-        s6(1번):  prev→r6(5번SetB)   next→s7
-        s7(2번):  prev→r7            next→s8
-        s8(3번):  prev→r8            next→s9
-        s9(4번):  prev→r9            next→s10
-        s10(5번): prev→r10           next→sf
-        s11(1번): prev→r11           next→s7
+      <!-- s1(1번) prev→sb  next→s2 -->
+      <label for="sb"  class="btn cs1">❮</label><label for="s2"  class="btn cs1">❯</label>
+      <!-- s2(2번) prev→r2  next→s3 -->
+      <label for="r2"  class="btn cs2">❮</label><label for="s3"  class="btn cs2">❯</label>
+      <!-- s3(3번) prev→r3  next→s4 -->
+      <label for="r3"  class="btn cs3">❮</label><label for="s4"  class="btn cs3">❯</label>
+      <!-- s4(4번) prev→r4  next→s5 -->
+      <label for="r4"  class="btn cs4">❮</label><label for="s5"  class="btn cs4">❯</label>
+      <!-- s5(5번) prev→r5  next→s6 -->
+      <label for="r5"  class="btn cs5">❮</label><label for="s6"  class="btn cs5">❯</label>
+      <!-- s6(1번) prev→sb  next→s7 -->
+      <label for="sb"  class="btn cs6">❮</label><label for="s7"  class="btn cs6">❯</label>
+      <!-- s7(2번) prev→r7  next→s8 -->
+      <label for="r7"  class="btn cs7">❮</label><label for="s8"  class="btn cs7">❯</label>
+      <!-- s8(3번) prev→r8  next→s9 -->
+      <label for="r8"  class="btn cs8">❮</label><label for="s9"  class="btn cs8">❯</label>
+      <!-- s9(4번) prev→r9  next→s10 -->
+      <label for="r9"  class="btn cs9">❮</label><label for="s10" class="btn cs9">❯</label>
+      <!-- s10(5번) prev→r6  next→s1 -->
+      <label for="r6"  class="btn cs10">❮</label><label for="s1"  class="btn cs10">❯</label>
 
-        sb(더미): prev→s1            next→r5(5번보임)
-        r1(1번):  prev→sb            next→s2
-        r2(5번):  prev→r3            next→s1
-        r3(4번):  prev→r4            next→s5
-        r4(3번):  prev→r5            next→s4
-        r5(2번):  prev→r6            next→s3
-        r6(5번):  prev→r7            next→s6
-        r7(4번):  prev→r8            next→s10
-        r8(3번):  prev→r9            next→s9
-        r9(2번):  prev→r10           next→s8
-        r10(1번): prev→r11           next→s7
-        r11(5번): prev→r6            next→s11
-      -->
+      <!-- sb(더미) prev→r5  next→s5 (애니완료 후 5번으로) -->
+      <label for="r5"  class="btn csb">❮</label><label for="s5"  class="btn csb">❯</label>
 
-      <!-- s시리즈 버튼 -->
-      <label for="sb" class="btn cs1">❮</label><label for="s2"  class="btn cs1">❯</label>
-      <label for="r2" class="btn cs2">❮</label><label for="s3"  class="btn cs2">❯</label>
-      <label for="r3" class="btn cs3">❮</label><label for="s4"  class="btn cs3">❯</label>
-      <label for="r4" class="btn cs4">❮</label><label for="s5"  class="btn cs4">❯</label>
-      <label for="r5" class="btn cs5">❮</label><label for="sf"  class="btn cs5">❯</label>
-      <!-- sf: 더미 플립 완료 후 s6으로 -->
-      <label for="s5" class="btn csf">❮</label><label for="s6"  class="btn csf">❯</label>
-      <label for="r6" class="btn cs6">❮</label><label for="s7"  class="btn cs6">❯</label>
-      <label for="r7" class="btn cs7">❮</label><label for="s8"  class="btn cs7">❯</label>
-      <label for="r8" class="btn cs8">❮</label><label for="s9"  class="btn cs8">❯</label>
-      <label for="r9" class="btn cs9">❮</label><label for="s10" class="btn cs9">❯</label>
-      <label for="r10" class="btn cs10">❮</label><label for="sf" class="btn cs10">❯</label>
-      <label for="r11" class="btn cs11">❮</label><label for="s7" class="btn cs11">❯</label>
-
-      <!-- sb: 더미 플립 완료 후 r5(=5번)로 -->
-      <label for="s1" class="btn csb">❮</label><label for="r5"  class="btn csb">❯</label>
-
-      <!-- r시리즈 버튼 -->
-      <label for="sb" class="btn cr1">❮</label><label for="s2"  class="btn cr1">❯</label>
-      <label for="r3" class="btn cr2">❮</label><label for="s1"  class="btn cr2">❯</label>
-      <label for="r4" class="btn cr3">❮</label><label for="s5"  class="btn cr3">❯</label>
-      <label for="r5" class="btn cr4">❮</label><label for="s4"  class="btn cr4">❯</label>
-      <label for="r6" class="btn cr5">❮</label><label for="s3"  class="btn cr5">❯</label>
-      <label for="r7" class="btn cr6">❮</label><label for="s6"  class="btn cr6">❯</label>
-      <label for="r8" class="btn cr7">❮</label><label for="s10" class="btn cr7">❯</label>
-      <label for="r9" class="btn cr8">❮</label><label for="s9"  class="btn cr8">❯</label>
-      <label for="r10" class="btn cr9">❮</label><label for="s8" class="btn cr9">❯</label>
-      <label for="r11" class="btn cr10">❮</label><label for="s7" class="btn cr10">❯</label>
-      <label for="r6"  class="btn cr11">❮</label><label for="s11" class="btn cr11">❯</label>
+      <!-- r1(1번) prev→sb  next→s2 -->
+      <label for="sb"  class="btn cr1">❮</label><label for="s2"  class="btn cr1">❯</label>
+      <!-- r2(2번) prev→r1  next→s3 -->
+      <label for="r1"  class="btn cr2">❮</label><label for="s3"  class="btn cr2">❯</label>
+      <!-- r3(3번) prev→r2  next→s4 -->
+      <label for="r2"  class="btn cr3">❮</label><label for="s4"  class="btn cr3">❯</label>
+      <!-- r4(4번) prev→r3  next→s5 -->
+      <label for="r3"  class="btn cr4">❮</label><label for="s5"  class="btn cr4">❯</label>
+      <!-- r5(5번) prev→r4  next→s6 -->
+      <label for="r4"  class="btn cr5">❮</label><label for="s6"  class="btn cr5">❯</label>
+      <!-- r6(5번SetB) prev→r7  next→s10 -->
+      <label for="r7"  class="btn cr6">❮</label><label for="s10" class="btn cr6">❯</label>
+      <!-- r7(4번) prev→r8  next→s9 -->
+      <label for="r8"  class="btn cr7">❮</label><label for="s9"  class="btn cr7">❯</label>
+      <!-- r8(3번) prev→r9  next→s8 -->
+      <label for="r9"  class="btn cr8">❮</label><label for="s8"  class="btn cr8">❯</label>
+      <!-- r9(2번) prev→r10  next→s7 -->
+      <label for="r10" class="btn cr9">❮</label><label for="s7"  class="btn cr9">❯</label>
+      <!-- r10(1번) prev→sb  next→s6 -->
+      <label for="sb"  class="btn cr10">❮</label><label for="s6"  class="btn cr10">❯</label>
     </div>
 
     <div class="yel-background"></div>
